@@ -22,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/PreciousChicken/forget-me-block-cal-auth/issues"
   },
-  "homepage": "https://github.com/PreciousChicken/forget-me-block-cal-auth#readme"
+  "homepage": "https://github.com/PreciousChicken/forget-me-block-cal-auth#readme",
+  "devDependencies": {
+    "eslint": "^7.6.0",
+    "eslint-plugin-react": "^7.20.5"
+  }
 }
