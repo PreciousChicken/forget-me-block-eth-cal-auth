@@ -1,2 +1,2 @@
-const CalAuthAddress ='0xBa7B815587aE068A4b885976f7365713FEEc9081';
+const CalAuthAddress ='0x2FdB6fE77794fae02fAb78D1ED270D6766426F9C';
 export default CalAuthAddress;
