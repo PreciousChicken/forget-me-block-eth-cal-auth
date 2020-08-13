@@ -1,7 +1,6 @@
 import React from 'react';
 import Button from 'react-bootstrap/Button';
 import Spinner from 'react-bootstrap/Spinner';
-import Roles from "./Roles";
 
 function RevokeButton(props) {
 	if (props.pending === props.address) {

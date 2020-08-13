@@ -40,8 +40,6 @@ function AdminDashboard(props) {
 	const [readMembers, setReadMembers] = useState([]);
 	const [alertHeading, setAlertHeading] = useState("");
 	const [pendingRevoke, setPendingRevoke] = useState("0x00");
-	const [eventOccur, setEventOccur] = useState(false);
-
 
 	// Required as solidity Event returned as keccak hash of byte32
 	function keccakToRole(keccakRole) {
@@ -116,7 +114,6 @@ function AdminDashboard(props) {
 		} else {
 		contractCalAuth.grantRole(requesteeLevel, requesteeAddress)
 			.then(contractCalAuth.on("RoleGranted", (role, account,sender) => {
-				setEventOccur(true);
 				setGrantedRole(keccakToRole(role));
 				setGrantedAccount(account);
 				setAlertHeading("Access granted");
