@@ -1,12 +1,15 @@
 import React , { useState, useEffect  } from 'react';
 import Form from 'react-bootstrap/Form';
-import Button from 'react-bootstrap/Button';
 import Alert from 'react-bootstrap/Alert';
+import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ethers } from "ethers";
 import CalAuth from "../contracts/CalAuth.json";
 import CalAuthAddress from "../data/ContractAddress";
 import Roles from "./Roles";
+import SubmitButton from "./SubmitButton";
+import RevokeButton from "./RevokeButton";
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 let provider;
 let signer;
@@ -31,7 +34,13 @@ function AdminDashboard(props) {
 	const [isGranted, setIsGranted] = useState(false);
 	const [grantedRole, setGrantedRole] = useState();
 	const [grantedAccount, setGrantedAccount] = useState("0x00");
-	const [pendingBlockchain, setPendingBlockahin] = useState(false);
+	const [pendingBlockchain, setPendingBlockchain] = useState(false);
+	const [adminMembers, setAdminMembers] = useState([]);
+	const [writeMembers, setWriteMembers] = useState([]);
+	const [readMembers, setReadMembers] = useState([]);
+	const [alertHeading, setAlertHeading] = useState("");
+	const [pendingRevoke, setPendingRevoke] = useState("0x00");
+	const [eventOccur, setEventOccur] = useState(false);
 
 
 	// Required as solidity Event returned as keccak hash of byte32
@@ -48,26 +57,99 @@ function AdminDashboard(props) {
 		}
 	}
 
+	async function getRoleMembership(role) {
+		const roleCount = await contractCalAuth.getRoleMemberCount(role);
+		const members = [];
+		for (let i = 0; i < roleCount; ++i) {
+			members.push(await contractCalAuth.getRoleMember(role, i));
+		}
+		// console.log("readMembers", members[0]);
+		return members;
+	}
+
+	// Gets all members from blockchain on page load / reload
+	useEffect(() => {
+		getRoleMembership(keccakADMIN).then(members => setAdminMembers(members));
+		getRoleMembership(keccakWRITE).then(members => setWriteMembers(members));
+		getRoleMembership(keccakREAD).then(members => setReadMembers(members));
+		}, []);
+	
+	// Gets all members from blockchain on page load / reload
+	useEffect(() => {
+		getRoleMembership(keccakADMIN).then(members => setAdminMembers(members));
+		getRoleMembership(keccakWRITE).then(members => setWriteMembers(members));
+		getRoleMembership(keccakREAD).then(members => setReadMembers(members));
+		}, [pendingBlockchain, pendingRevoke]);
+
+	// Ensures address has not already been authorised
+	function verifyDuplicate(address) {
+		for (const member of adminMembers){
+			if (member === address) {
+				return true;
+			}
+		}
+		for (const member of writeMembers){
+			if (member === address) {
+				return true;
+			}
+		}
+		for (const member of readMembers){
+			if (member === address) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 	function formSubmit(event) {
 		setIsGranted(false); 
 		setIsError(false); 
-		setPendingBlockahin(true);
+		setPendingBlockchain(true);
 		const grantAccess = new FormData(event.target);
 		const requesteeAddress = grantAccess.get('requestAddress');
 		let requesteeLevel = grantAccess.get('requestLevel');
-		requesteeLevel = ethers.utils.keccak256(ethers.utils.toUtf8Bytes(requesteeLevel));
+		requesteeLevel = roleToUTFToKeccak(requesteeLevel);
+		if(verifyDuplicate(requesteeAddress)) {
+				setErrorMsg("Duplicate address. Address already authorised.");
+				setIsError(true); 
+				setPendingBlockchain(false);
+		} else {
 		contractCalAuth.grantRole(requesteeLevel, requesteeAddress)
 			.then(contractCalAuth.on("RoleGranted", (role, account,sender) => {
+				setEventOccur(true);
 				setGrantedRole(keccakToRole(role));
 				setGrantedAccount(account);
+				setAlertHeading("Access granted");
 				setIsGranted(true); 
-				setPendingBlockahin(false);}))
+				setPendingBlockchain(false);}))
+		.catch(err => {
+				setErrorMsg(err.message);
+				setIsError(true); 
+				setPendingBlockchain(false);
+			})
+		}
+		event.preventDefault();
+	}
+
+	function revokeAccess(address, role) {
+		setPendingRevoke(address);
+		setIsGranted(false); 
+		setIsError(false); 
+		contractCalAuth.revokeRole(roleToUTFToKeccak(role), address)
+			.then(contractCalAuth.on("RoleRevoked", (role, account,sender) => {
+				setGrantedRole(keccakToRole(role));
+				setGrantedAccount(account);
+				setAlertHeading("Access revoked");
+				setIsGranted(true); 
+				setPendingBlockchain(false);
+				setPendingRevoke("0x00");
+			}))
 			.catch(err => {
 				setErrorMsg(err.message);
 				setIsError(true); 
-				setPendingBlockahin(false);
+				setPendingBlockchain(false);
+				setPendingRevoke("0x00");
 			})
-		event.preventDefault();
 	}
 
 
@@ -77,7 +159,7 @@ function AdminDashboard(props) {
 		return (
 			<Alert key="pending" variant="info" 
 			style={{position: 'relative', top: 5}}>
-			Access Granted:<br/>
+			<Alert.Heading>{alertHeading}</Alert.Heading>
 			Role: {grantedRole}<br/>
 			Account: {grantedAccount}<br/>
 			</Alert>
@@ -100,11 +182,55 @@ function AdminDashboard(props) {
 		<div>
 
 
-		<h2>Admin Dashboard</h2>
-		<span>logged on as: {props.address}</span>
-		<h3>Users with admin access:</h3>
-		<h3>Users with read-write access:</h3>
-		<h3>Users with read-only access:</h3>
+			<Alert variant="success" 
+			style={{position: 'relative'}}>
+		<span>Admin log on: {props.address}</span>
+			</Alert>
+		<h3>Users with access:</h3>
+		{ writeMembers.length + readMembers.length + adminMembers.length > 1 ?  
+		   <Table striped bordered hover>
+      <thead>
+      <tr>
+      <th>Level</th>
+      <th>Address</th>
+      <th>Revoke</th>
+      </tr>
+      </thead>
+      <tbody>
+      {adminMembers.map(member => 
+         <tr key={member}>
+         <td>Admin</td>
+         <td>{member}</td>
+				<td>
+				<RevokeButton role={Roles.ADMIN} pending={pendingRevoke} 
+				address={member} revokeAcc={revokeAccess}/>
+				</td>
+         </tr>
+      )}
+      {writeMembers.map(member => 
+         <tr key={member}>
+         <td>Read-write</td>
+				<td>{member}</td>
+				<td>
+				<RevokeButton role={Roles.USER_WRITE_ROLE} pending={pendingRevoke}
+				address={member} revokeAcc={revokeAccess}/>
+				</td>
+				</tr>
+			)}
+		{readMembers.map(member => 
+         <tr key={member}>
+         <td>Read only</td>
+         <td>{member}</td>
+				<td>
+				<RevokeButton role={Roles.USER_READ_ROLE} pending={pendingRevoke}
+				address={member} revokeAcc={revokeAccess}/>
+				</td>
+         </tr>
+      )}
+      </tbody>
+      </Table>
+			: 
+			<p>No users have access.</p> }
 
 		<h3>Grant access:</h3>
 		<div>
@@ -121,11 +247,7 @@ function AdminDashboard(props) {
 		<option value={Roles.ADMIN}>Admin</option>
 		</Form.Control>
 		</Form.Group>
-		<Button variant="primary" type="submit" >
-		Submit
-		</Button> 
-		{ pendingBlockchain &&
-		<img id="loader" width="40px" src="Rolling-1s-200px.svg" alt="Waiting for blockchain"/> }
+		<SubmitButton pending={pendingBlockchain} />
 		</Form>
 		<ErrorAlert />
 		<GrantedAlert />
@@ -136,18 +258,3 @@ function AdminDashboard(props) {
 
 export default AdminDashboard;
 
-
-
-		// <div>
-
-		// <span>Hello Admin! Your address: {props.address}</span> 
-		// <form>
-		// <p><label>Customer name: <input /></label></p>
-		// <fieldset>
-		// <legend> Pizza Size </legend>
-		// <p><label> <input type="radio" name="size" /> Small </label></p>
-		// <p><label> <input type="radio" name="size" /> Medium </label></p>
-		// <p><label> <input type="radio" name="size" /> Large </label></p>
-		// </fieldset>
-		// </form>
-		// </div>

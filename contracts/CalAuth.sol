@@ -19,10 +19,10 @@ contract CalAuth is Ownable, AccessControl {
     function getUserRole() public view returns (string memory) {
         if (hasRole(DEFAULT_ADMIN_ROLE, msg.sender)) {
             return "ADMIN";
-        } else if (hasRole(USER_READ_ROLE, msg.sender)) {
-            return "USER_READ_ROLE";
         } else if (hasRole(USER_WRITE_ROLE, msg.sender)) {
             return "USER_WRITE_ROLE";
+        } else if (hasRole(USER_READ_ROLE, msg.sender)) {
+            return "USER_READ_ROLE";
         }
         return "NIL";
     }

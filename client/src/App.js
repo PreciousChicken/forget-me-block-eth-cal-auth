@@ -2,7 +2,8 @@ import React, { useState, useEffect  } from 'react';
 import { ethers } from "ethers";
 import CalAuth from "./contracts/CalAuth.json";
 import './App.css';
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import Container from 'react-bootstrap/Container';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 import AdminDashboard from './Components/AdminDashboard';
 import UserDashboard from './Components/UserDashboard';
 import CalAuthAddress from "./data/ContractAddress";
@@ -47,8 +48,10 @@ function App() {
 	if (noProviderAbort) {
 		return (
 			<div>
+			<Jumbotron>
 			<h1>Error</h1>
 			<p><a href="https://metamask.io">Metamask</a> or equivalent required to access this page.</p>
+			</Jumbotron>
 			</div>
 		);
 	}
@@ -61,24 +64,37 @@ function App() {
 			case Roles.USER_WRITE_ROLE:
 				return (<UserDashboard address={walAddress} />);
 			default: 
-				return (<span>You are not authorised to use this system.  Please contact admin@example.org if you believe this is a mistake.</span>);
+				return (
+					<Jumbotron>
+					<h1>Unauthorised</h1>
+					<span>You are not authorised to use this system.  Please contact admin@example.org if you believe this is a mistake.
+					</span>
+					</Jumbotron>
+				);
 		}
 	}
 
   return (
+		<main>
+		<Container>
 		<div>
 		<h1>Blankshire NHS Trust</h1> 
-		<h2>Group Calendar Authentication</h2>
+		<h2>HealthPsy Group Eth-Cal Dashboard</h2>
 		<div>
 	{ walAddress === '0x00'
 			?
+			<Jumbotron>
+		<h1>Not connected to Ethereum</h1>
 			<p>You have not connected your Ethereum account to this application.  This is necessary to use this DApp.</p>
+			</Jumbotron>
 			:
 		determineUser() 
 	}	
 		</div>
 
 		</div>
+		</Container>
+		</main>
   );
 }
 
