@@ -51,6 +51,10 @@ contract CalAuth is Ownable, AccessControl {
     function ownerWelcomeString() public onlyOwner view returns (string memory) {
         return "Welcome owner";
     }
+
+    function justSayHiCalAuth() public pure returns (string memory) {
+        return "Hi from CalAuth";
+    }
 }
 
 // CalAuth.deployed().then(function(instance) {app = instance})

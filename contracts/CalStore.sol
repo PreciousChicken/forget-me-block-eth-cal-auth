@@ -3,6 +3,7 @@ pragma solidity ^0.6.1;
 pragma experimental ABIEncoderV2;
 
 import "./BokkyPooBahsDateTimeLibrary.sol";
+import "./CalAuth.sol";
 
 contract CalStore  {
     using BokkyPooBahsDateTimeLibrary for uint;
@@ -21,7 +22,15 @@ contract CalStore  {
 
     mapping(address => VEvent[]) private store;
     mapping(address => uint) private count;
+    CalAuth authority;
 
+    constructor(CalAuth _CalAuth) public {
+        authority = new CalAuth();
+    }
+
+    function authorityHi() public view returns (string memory) {
+        return authority.justSayHiCalAuth();
+    }
 
     function storeEvent(
         uint _dtstamp, uint _dtstart, uint _dtend,
@@ -45,8 +54,8 @@ contract CalStore  {
         store[msg.sender].push(newEvent);
     }
 
-    function justSayHi() public pure returns (string memory) {
-        return "Hi";
+    function justSayHiCalStore() public pure returns (string memory) {
+        return "Hi from CalStore";
     }
 
     function removeEvent(uint _dtstamp) public {
