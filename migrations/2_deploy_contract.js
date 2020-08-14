@@ -1,9 +1,9 @@
-var CalAuth = artifacts.require("CalAuth");
-var CalStore = artifacts.require("CalStore");
+const CalStore = artifacts.require("CalStore");
+const CalAuth = artifacts.require("CalAuth");
 
 module.exports = function(deployer) {
-  deployer.deploy(CalAuth).then(function() {
-		return deployer.deploy(CalStore, CalAuth.address);
+	deployer.deploy(CalStore).then(function() {
+		return deployer.deploy(CalAuth, CalStore.address);
 	})
 };
 

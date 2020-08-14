@@ -3,14 +3,35 @@ pragma solidity ^0.6.0;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "./CalStore.sol";
 
 contract CalAuth is Ownable, AccessControl {
 
     bytes32 public constant USER_READ_ROLE = keccak256("USER_READ_ROLE");
     bytes32 public constant USER_WRITE_ROLE = keccak256("USER_WRITE_ROLE");
+    CalStore calStore;
 
-    constructor() public {
+    constructor(address _addr) public {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        calStore = CalStore(_addr);
+    }
+
+    function storeEvent(
+        uint _dtstamp,
+        uint _dtstart,
+        uint _dtend,
+        string memory _summary,
+        string memory _description,
+        bool _isallday,
+        string memory _alldaystartdate,
+        string memory _alldayenddate)
+        public
+        {
+        calStore.storeEvent(
+            _dtstamp, _dtstart, _dtend,
+            _summary, _description,
+            _isallday, _alldaystartdate,
+            _alldayenddate);
     }
 
     /// @notice Returns role of msg.sender

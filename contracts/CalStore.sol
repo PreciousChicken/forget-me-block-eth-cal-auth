@@ -3,7 +3,6 @@ pragma solidity ^0.6.1;
 pragma experimental ABIEncoderV2;
 
 import "./BokkyPooBahsDateTimeLibrary.sol";
-import "./CalAuth.sol";
 
 contract CalStore  {
     using BokkyPooBahsDateTimeLibrary for uint;
@@ -22,15 +21,6 @@ contract CalStore  {
 
     mapping(address => VEvent[]) private store;
     mapping(address => uint) private count;
-    CalAuth authority;
-
-    constructor(CalAuth _CalAuth) public {
-        authority = new CalAuth();
-    }
-
-    function authorityHi() public view returns (string memory) {
-        return authority.justSayHiCalAuth();
-    }
 
     function storeEvent(
         uint _dtstamp, uint _dtstart, uint _dtend,
@@ -210,9 +200,10 @@ contract CalStore  {
 }
 
 // CalStore.deployed().then(function(instance) {app = instance})
+// CalAuth.deployed().then(function(instance) {app = instance})
 // let accounts = await web3.eth.getAccounts()
 
-// app.storeEvent(1595170930, 1596121200, 1596123000, "Meeting 1", "First Meeting");
+// app.storeEvent(1595170930, 1596121200, 1596123000, "Meeting 1", "First Meeting", false, "", "");
 // app.storeEvent(1595171030, 1596290400, 1596295800, "Meeting 2", "Second Meeting");
 // app.getEventsObj(accounts[0]);
 // app.getEventsIcal(accounts[0]);
