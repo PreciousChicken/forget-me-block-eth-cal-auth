@@ -1,7 +1,19 @@
 const Roles = {
-	ADMIN: 'ADMIN',
-	USER_WRITE_ROLE: 'USER_WRITE_ROLE',
-	USER_READ_ROLE: 'USER_READ_ROLE',
-	NIL: 'NIL'
+	ADMIN: {
+		TXT: 'ADMIN',
+		HUMAN: 'Admin'
+	},
+	USER_WRITE_ROLE: {
+		TXT: 'USER_WRITE_ROLE',
+		HUMAN: 'Read-Write'
+	},
+	USER_READ_ROLE: {
+		TXT: 'USER_READ_ROLE',
+		HUMAN: 'Read-Only'
+	},
+	NIL: {
+		TXT: 'Nil',
+		HUMAN: 'Nil'
+	}
 }
 export default Roles;

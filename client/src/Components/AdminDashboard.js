@@ -20,9 +20,9 @@ signer = provider.getSigner();
 contractCalAuth = new ethers.Contract(CalAuthAddress, CalAuth.abi, signer);
 
 // Used by keccakToRole function
-const keccakADMIN = roleToUTFToKeccak(Roles.ADMIN);
-const keccakWRITE = roleToUTFToKeccak(Roles.USER_WRITE_ROLE);
-const keccakREAD = roleToUTFToKeccak(Roles.USER_READ_ROLE);
+const keccakADMIN = roleToUTFToKeccak(Roles.ADMIN.TXT);
+const keccakWRITE = roleToUTFToKeccak(Roles.USER_WRITE_ROLE.TXT);
+const keccakREAD = roleToUTFToKeccak(Roles.USER_READ_ROLE.TXT);
 
 function roleToUTFToKeccak(role) {
 	return ethers.utils.keccak256(ethers.utils.toUtf8Bytes(role));
@@ -177,14 +177,13 @@ function AdminDashboard(props) {
 	
 	return (
 		<div>
-
-
+		<h2>HealthPsy Group Eth-Cal Dashboard</h2>
 			<Alert variant="success" 
 			style={{position: 'relative'}}>
 		<span>Admin log on: {props.address}</span>
 			</Alert>
 		<h3>Users with access:</h3>
-		{ writeMembers.length + readMembers.length + adminMembers.length > 1 ?  
+		{ writeMembers.length + readMembers.length + adminMembers.length > 0 ?  
 		   <Table striped bordered hover>
       <thead>
       <tr>
@@ -199,7 +198,7 @@ function AdminDashboard(props) {
          <td>Admin</td>
          <td>{member}</td>
 				<td>
-				<RevokeButton role={Roles.ADMIN} pending={pendingRevoke} 
+				<RevokeButton role={Roles.ADMIN.TXT} pending={pendingRevoke} 
 				address={member} revokeAcc={revokeAccess}/>
 				</td>
          </tr>
@@ -209,7 +208,7 @@ function AdminDashboard(props) {
          <td>Read-write</td>
 				<td>{member}</td>
 				<td>
-				<RevokeButton role={Roles.USER_WRITE_ROLE} pending={pendingRevoke}
+				<RevokeButton role={Roles.USER_WRITE_ROLE.TXT} pending={pendingRevoke}
 				address={member} revokeAcc={revokeAccess}/>
 				</td>
 				</tr>
@@ -219,7 +218,7 @@ function AdminDashboard(props) {
          <td>Read only</td>
          <td>{member}</td>
 				<td>
-				<RevokeButton role={Roles.USER_READ_ROLE} pending={pendingRevoke}
+				<RevokeButton role={Roles.TXT.USER_READ_ROLE} pending={pendingRevoke}
 				address={member} revokeAcc={revokeAccess}/>
 				</td>
          </tr>
@@ -239,9 +238,9 @@ function AdminDashboard(props) {
 		<Form.Group controlId="formGroupAccess">
 		<Form.Label>Access level:</Form.Label>
 		<Form.Control as="select" name="requestLevel">
-		<option value={Roles.USER_READ_ROLE}>Read-only</option>
-		<option value={Roles.USER_WRITE_ROLE}>Read-write</option>
-		<option value={Roles.ADMIN}>Admin</option>
+		<option value={Roles.USER_READ_ROLE.TXT}>Read-only</option>
+		<option value={Roles.USER_WRITE_ROLE.TXT}>Read-write</option>
+		<option value={Roles.ADMIN.TXT}>Admin</option>
 		</Form.Control>
 		</Form.Group>
 		<SubmitButton pending={pendingBlockchain} />

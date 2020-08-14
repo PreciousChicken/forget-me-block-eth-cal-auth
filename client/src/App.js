@@ -32,14 +32,13 @@ contractCalAuth = new ethers.Contract(CalAuthAddress, CalAuth.abi, signer);
 function App() {
 
 	const [walAddress, setWalAddress] = useState('0x00');
-	const [userRole, setUserRole] = useState(Roles.NIL);
+	const [userRole, setUserRole] = useState(Roles.NIL.TXT);
 
 	// Gets wallet address then role of user from contract
 	useEffect(() => {
 		signer.getAddress()
 			.then(response => {
 				setWalAddress(response);
-				// console.log(ethers.utils.keccak256(ethers.utils.toUtf8Bytes("hello world")));
 				contractCalAuth.getUserRole().then(roleValue => setUserRole(roleValue));
 			})
 	}, []);
@@ -58,15 +57,23 @@ function App() {
 
 	function determineUser() {
 		switch(userRole){
-			case Roles.ADMIN:
+			case Roles.ADMIN.TXT:
 				return (<AdminDashboard address={walAddress} />);
-			case Roles.USER_READ_ROLE:
-			case Roles.USER_WRITE_ROLE:
-				return (<UserDashboard address={walAddress} />);
-			default: 
+			case Roles.USER_READ_ROLE.TXT:
+				return (<UserDashboard address={walAddress} role={Roles.USER_READ_ROLE.HUMAN} />);
+			case Roles.USER_WRITE_ROLE.TXT:
+				return (<UserDashboard address={walAddress} role={Roles.USER_WRITE_ROLE.HUMAN} />);
+			default:
+				console.log(walAddress);
 				return (
 					<Jumbotron>
+					<p>
+					<svg width="5em" height="5em" viewBox="0 0 16 16" class="bi bi-x-octagon-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M11.46.146A.5.5 0 0 0 11.107 0H4.893a.5.5 0 0 0-.353.146L.146 4.54A.5.5 0 0 0 0 4.893v6.214a.5.5 0 0 0 .146.353l4.394 4.394a.5.5 0 0 0 .353.146h6.214a.5.5 0 0 0 .353-.146l4.394-4.394a.5.5 0 0 0 .146-.353V4.893a.5.5 0 0 0-.146-.353L11.46.146zm.394 4.708a.5.5 0 0 0-.708-.708L8 7.293 4.854 4.146a.5.5 0 1 0-.708.708L7.293 8l-3.147 3.146a.5.5 0 0 0 .708.708L8 8.707l3.146 3.147a.5.5 0 0 0 .708-.708L8.707 8l3.147-3.146z"/>
+</svg>
+					</p>
 					<h1>Unauthorised</h1>
+
 					<span>You are not authorised to use this system.  Please contact admin@example.org if you believe this is a mistake.
 					</span>
 					</Jumbotron>
@@ -79,7 +86,6 @@ function App() {
 		<Container>
 		<div>
 		<h1>Blankshire NHS Trust</h1> 
-		<h2>HealthPsy Group Eth-Cal Dashboard</h2>
 		<div>
 	{ walAddress === '0x00'
 			?

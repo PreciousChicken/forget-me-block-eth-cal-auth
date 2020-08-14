@@ -1,15 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.6.0;
+pragma experimental ABIEncoderV2;
 
 import "@openzeppelin/contracts/access/AccessControl.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "./CalStore.sol";
+import "./VEventLibrary.sol";
 
 contract CalAuth is Ownable, AccessControl {
+    using VEventLibrary for VEventLibrary.VEvent;
 
     bytes32 public constant USER_READ_ROLE = keccak256("USER_READ_ROLE");
     bytes32 public constant USER_WRITE_ROLE = keccak256("USER_WRITE_ROLE");
-    CalStore calStore;
+    CalStore private calStore;
+
 
     constructor(address _addr) public {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
@@ -33,6 +37,19 @@ contract CalAuth is Ownable, AccessControl {
             _isallday, _alldaystartdate,
             _alldayenddate);
     }
+
+    function removeEvent(uint _dtstamp) public {
+        calStore.removeEvent(_dtstamp);
+    }
+
+    function getEventsIcal() public view returns (string memory) {
+        return calStore.getEventsIcal();
+    }
+
+    function getEventsObj() public view returns (VEventLibrary.VEvent[] memory) {
+        return calStore.getEventsObj();
+    }
+
 
     /// @notice Returns role of msg.sender
     /// @dev Returns in hierarchial order, e.g. ADMIN more important than READ etc

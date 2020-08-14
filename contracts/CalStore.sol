@@ -3,23 +3,14 @@ pragma solidity ^0.6.1;
 pragma experimental ABIEncoderV2;
 
 import "./BokkyPooBahsDateTimeLibrary.sol";
+import "./VEventLibrary.sol";
 
 contract CalStore  {
     using BokkyPooBahsDateTimeLibrary for uint;
+    using VEventLibrary for VEventLibrary.VEvent;
 
-    struct VEvent {
-        uint dtstamp;
-        uint dtstart;
-        uint dtend;
-        string summary;
-        string description;
-        bool isallday;
-        string alldaystartdate;
-        string alldayenddate;
-        uint uid; // This should by dtstart, plus an id, plus msg.owner Change to string eventually
-    }
 
-    mapping(address => VEvent[]) private store;
+    mapping(address => VEventLibrary.VEvent[]) private store;
     mapping(address => uint) private count;
 
     function storeEvent(
@@ -31,7 +22,7 @@ contract CalStore  {
         {
         count[msg.sender]++;
         uint nextId = count[msg.sender];
-        VEvent memory newEvent = VEvent(
+        VEventLibrary.VEvent memory newEvent = VEventLibrary.VEvent(
             _dtstamp,
             _dtstart,
             _dtend,
@@ -61,20 +52,20 @@ contract CalStore  {
         }
     }
 
+    // TODO: Is this needed anywhere?  Can I remove?
     function timestampToDateTime(uint timestamp) public pure returns (uint year, uint month, uint day, uint hour, uint minute, uint second) {
         (year, month, day, hour, minute, second) = BokkyPooBahsDateTimeLibrary.timestampToDateTime(timestamp);
     }
 
     /// @notice Returns iCal string of message senders previously stored data
     /// @dev TODO: Return if no events?
-    /// @param _calOwner address of message sender
     /// @return string iCalendar string iaw RFC 5545
-    function getEventsIcal(address _calOwner) public view returns (string memory) {
+    function getEventsIcal() public view returns (string memory) {
         string memory outputString = "";
         string memory vCalHeader = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//preciouschicken.com//forget-me-block-eth-cal\nCALSCALE:GREGORIAN\n";
         string memory vCalFooter = "END:VCALENDAR\n";
-        VEvent[] memory ownerEvent = store[_calOwner];
-        string memory ownerStr = addressToStr(_calOwner);
+        VEventLibrary.VEvent[] memory ownerEvent = store[msg.sender];
+        string memory ownerStr = addressToStr(msg.sender);
 
         for (uint i = 0; i < ownerEvent.length; i++) {
             string memory dtstamp = unixTimeToStr(ownerEvent[i].dtstamp);
@@ -138,10 +129,8 @@ contract CalStore  {
     }
 
     // Returns all msg for msg.sender, regardless of time
-    function getEventsObj(address _calOwner) public view returns (VEvent[] memory) {
-
-        // Return error if no events
-        VEvent[] memory tempData = store[_calOwner];
+    function getEventsObj() public view returns (VEventLibrary.VEvent[] memory) {
+        VEventLibrary.VEvent[] memory tempData = store[msg.sender];
         return tempData;
     }
 
