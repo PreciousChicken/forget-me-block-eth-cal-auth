@@ -195,7 +195,7 @@ function AdminDashboard(props) {
       <tbody>
       {adminMembers.map(member => 
          <tr key={member}>
-         <td>Admin</td>
+         <td>{Roles.ADMIN.HUMAN}</td>
          <td>{member}</td>
 				<td>
 				<RevokeButton role={Roles.ADMIN.TXT} pending={pendingRevoke} 
@@ -205,7 +205,7 @@ function AdminDashboard(props) {
       )}
       {writeMembers.map(member => 
          <tr key={member}>
-         <td>Read-write</td>
+         <td>{Roles.USER_WRITE_ROLE.HUMAN}</td>
 				<td>{member}</td>
 				<td>
 				<RevokeButton role={Roles.USER_WRITE_ROLE.TXT} pending={pendingRevoke}
@@ -215,10 +215,10 @@ function AdminDashboard(props) {
 			)}
 		{readMembers.map(member => 
          <tr key={member}>
-         <td>Read only</td>
+         <td>{Roles.USER_READ_ROLE.HUMAN}</td>
          <td>{member}</td>
 				<td>
-				<RevokeButton role={Roles.TXT.USER_READ_ROLE} pending={pendingRevoke}
+				<RevokeButton role={Roles.USER_READ_ROLE.TXT} pending={pendingRevoke}
 				address={member} revokeAcc={revokeAccess}/>
 				</td>
          </tr>

@@ -5,11 +5,11 @@ const Roles = {
 	},
 	USER_WRITE_ROLE: {
 		TXT: 'USER_WRITE_ROLE',
-		HUMAN: 'Read-Write'
+		HUMAN: 'Read-write'
 	},
 	USER_READ_ROLE: {
 		TXT: 'USER_READ_ROLE',
-		HUMAN: 'Read-Only'
+		HUMAN: 'Read-only'
 	},
 	NIL: {
 		TXT: 'Nil',

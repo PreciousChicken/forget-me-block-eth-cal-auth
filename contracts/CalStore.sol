@@ -194,8 +194,8 @@ contract CalStore  {
 
 // app.storeEvent(1595170930, 1596121200, 1596123000, "Meeting 1", "First Meeting", false, "", "");
 // app.storeEvent(1595171030, 1596290400, 1596295800, "Meeting 2", "Second Meeting");
-// app.getEventsObj(accounts[0]);
-// app.getEventsIcal(accounts[0]);
+// app.getEventsObj({from: accounts[1]});
+// app.getEventsIcal({from: accounts[0]});
 // app.justSayHi();
 
 // get all accounts: web3.eth.getAccounts().then(console.log)

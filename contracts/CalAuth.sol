@@ -14,10 +14,25 @@ contract CalAuth is Ownable, AccessControl {
     bytes32 public constant USER_WRITE_ROLE = keccak256("USER_WRITE_ROLE");
     CalStore private calStore;
 
-
     constructor(address _addr) public {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         calStore = CalStore(_addr);
+    }
+
+    modifier onlyRole(bytes32 _role) {
+        if (_role == USER_WRITE_ROLE) {
+            require(
+                hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+                hasRole(USER_WRITE_ROLE, msg.sender),
+                "User not authorised");
+            _;
+        }
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+            hasRole(USER_WRITE_ROLE, msg.sender) ||
+            hasRole(USER_READ_ROLE, msg.sender),
+            "User not authorised");
+        _;
     }
 
     function storeEvent(
@@ -29,7 +44,7 @@ contract CalAuth is Ownable, AccessControl {
         bool _isallday,
         string memory _alldaystartdate,
         string memory _alldayenddate)
-        public
+        public onlyRole(USER_WRITE_ROLE)
         {
         calStore.storeEvent(
             _dtstamp, _dtstart, _dtend,
@@ -38,15 +53,26 @@ contract CalAuth is Ownable, AccessControl {
             _alldayenddate);
     }
 
-    function removeEvent(uint _dtstamp) public {
+    function removeEvent(uint _dtstamp) public onlyRole(USER_WRITE_ROLE) {
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+            hasRole(USER_WRITE_ROLE, msg.sender),
+            "User not authorised");
         calStore.removeEvent(_dtstamp);
     }
 
-    function getEventsIcal() public view returns (string memory) {
+    function getEventsIcal() public view onlyRole(USER_READ_ROLE) returns (
+        string memory) {
         return calStore.getEventsIcal();
     }
 
-    function getEventsObj() public view returns (VEventLibrary.VEvent[] memory) {
+    function getEventsObj() public view onlyRole(USER_READ_ROLE) returns (
+        VEventLibrary.VEvent[] memory) {
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+            hasRole(USER_WRITE_ROLE, msg.sender) ||
+            hasRole(USER_READ_ROLE, msg.sender),
+            "User not authorised");
         return calStore.getEventsObj();
     }
 
@@ -65,18 +91,22 @@ contract CalAuth is Ownable, AccessControl {
         return "NIL";
     }
 
+    //TODO: Delete, not used
     function addRead(address userAddress) public onlyOwner {
         grantRole(USER_READ_ROLE, userAddress);
     }
 
+    //TODO: Delete, not used
     function addWrite(address userAddress) public onlyOwner {
         grantRole(USER_WRITE_ROLE, userAddress);
     }
 
+    //TODO: Delete, not used
     function revokeRead(address userAddress) public onlyOwner {
         revokeRole(USER_READ_ROLE, userAddress);
     }
 
+    //TODO: Delete, not used
     function revokeWrite(address userAddress) public onlyOwner {
         revokeRole(USER_WRITE_ROLE, userAddress);
     }

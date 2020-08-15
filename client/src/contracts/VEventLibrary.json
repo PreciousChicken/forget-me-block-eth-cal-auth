@@ -4,6 +4,7 @@
   "metadata": "{\"compiler\":{\"version\":\"0.6.12+commit.27d51765\"},\"language\":\"Solidity\",\"output\":{\"abi\":[],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"/home/gene/Programming/Websites/Precious_Chicken_Website/blog_code_demos/forget-me-block-cal-auth/contracts/VEventLibrary.sol\":\"VEventLibrary\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/home/gene/Programming/Websites/Precious_Chicken_Website/blog_code_demos/forget-me-block-cal-auth/contracts/VEventLibrary.sol\":{\"keccak256\":\"0xae3781d9f6371ee0861e118b0dc57e7dbdff81302eda516d89ee4d6d6c6086f1\",\"license\":\"MIT\",\"urls\":[\"bzz-raw://2d8a21e75712d983e8f4f8257d34b92e35af499321ae77540a232046fe1bb3bc\",\"dweb:/ipfs/QmUc1hNVSDdrPtw4SXePuLLHp7zgJV54XdP3XH6C7BkD9w\"]}},\"version\":1}",
   "bytecode": "0x60566023600b82828239805160001a607314601657fe5b30600052607381538281f3fe73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122047a1ed7bdffc7e2844db84ef6f943ec58e4469c567b730cd7971dffac25a7f3664736f6c634300060c0033",
   "deployedBytecode": "0x73000000000000000000000000000000000000000030146080604052600080fdfea264697066735822122047a1ed7bdffc7e2844db84ef6f943ec58e4469c567b730cd7971dffac25a7f3664736f6c634300060c0033",
+  "immutableReferences": {},
   "sourceMap": "57:352:4:-:0;;;;;;;;;;;;;;;;;;;;;;;;;",
   "deployedSourceMap": "57:352:4:-:0;;;;;;;;",
   "source": "// SPDX-License-Identifier: MIT\npragma solidity ^0.6.0;\n\nlibrary VEventLibrary {\n    struct VEvent {\n        uint dtstamp;\n        uint dtstart;\n        uint dtend;\n        string summary;\n        string description;\n        bool isallday;\n        string alldaystartdate;\n        string alldayenddate;\n        uint uid; // This should by dtstart, plus an id, plus msg.owner Change to string eventually\n    }\n}\n",
@@ -12,15 +13,15 @@
     "absolutePath": "/home/gene/Programming/Websites/Precious_Chicken_Website/blog_code_demos/forget-me-block-cal-auth/contracts/VEventLibrary.sol",
     "exportedSymbols": {
       "VEventLibrary": [
-        2622
+        2709
       ]
     },
-    "id": 2623,
+    "id": 2710,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2602,
+        "id": 2689,
         "literals": [
           "solidity",
           "^",
@@ -37,25 +38,25 @@
         "contractKind": "library",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 2622,
+        "id": 2709,
         "linearizedBaseContracts": [
-          2622
+          2709
         ],
         "name": "VEventLibrary",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "VEventLibrary.VEvent",
-            "id": 2621,
+            "id": 2708,
             "members": [
               {
                 "constant": false,
-                "id": 2604,
+                "id": 2691,
                 "mutability": "mutable",
                 "name": "dtstamp",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "109:12:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -64,7 +65,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2603,
+                  "id": 2690,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "109:4:4",
@@ -78,12 +79,12 @@
               },
               {
                 "constant": false,
-                "id": 2606,
+                "id": 2693,
                 "mutability": "mutable",
                 "name": "dtstart",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "131:12:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -92,7 +93,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2605,
+                  "id": 2692,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "131:4:4",
@@ -106,12 +107,12 @@
               },
               {
                 "constant": false,
-                "id": 2608,
+                "id": 2695,
                 "mutability": "mutable",
                 "name": "dtend",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "153:10:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -120,7 +121,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2607,
+                  "id": 2694,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "153:4:4",
@@ -134,12 +135,12 @@
               },
               {
                 "constant": false,
-                "id": 2610,
+                "id": 2697,
                 "mutability": "mutable",
                 "name": "summary",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "173:14:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -148,7 +149,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 2609,
+                  "id": 2696,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "173:6:4",
@@ -162,12 +163,12 @@
               },
               {
                 "constant": false,
-                "id": 2612,
+                "id": 2699,
                 "mutability": "mutable",
                 "name": "description",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "197:18:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -176,7 +177,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 2611,
+                  "id": 2698,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "197:6:4",
@@ -190,12 +191,12 @@
               },
               {
                 "constant": false,
-                "id": 2614,
+                "id": 2701,
                 "mutability": "mutable",
                 "name": "isallday",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "225:13:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -204,7 +205,7 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2613,
+                  "id": 2700,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
                   "src": "225:4:4",
@@ -218,12 +219,12 @@
               },
               {
                 "constant": false,
-                "id": 2616,
+                "id": 2703,
                 "mutability": "mutable",
                 "name": "alldaystartdate",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "248:22:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -232,7 +233,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 2615,
+                  "id": 2702,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "248:6:4",
@@ -246,12 +247,12 @@
               },
               {
                 "constant": false,
-                "id": 2618,
+                "id": 2705,
                 "mutability": "mutable",
                 "name": "alldayenddate",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "280:20:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -260,7 +261,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 2617,
+                  "id": 2704,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "280:6:4",
@@ -274,12 +275,12 @@
               },
               {
                 "constant": false,
-                "id": 2620,
+                "id": 2707,
                 "mutability": "mutable",
                 "name": "uid",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "310:8:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -288,7 +289,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2619,
+                  "id": 2706,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "310:4:4",
@@ -303,12 +304,12 @@
             ],
             "name": "VEvent",
             "nodeType": "StructDefinition",
-            "scope": 2622,
+            "scope": 2709,
             "src": "85:322:4",
             "visibility": "public"
           }
         ],
-        "scope": 2623,
+        "scope": 2710,
         "src": "57:352:4"
       }
     ],
@@ -318,15 +319,15 @@
     "absolutePath": "/home/gene/Programming/Websites/Precious_Chicken_Website/blog_code_demos/forget-me-block-cal-auth/contracts/VEventLibrary.sol",
     "exportedSymbols": {
       "VEventLibrary": [
-        2622
+        2709
       ]
     },
-    "id": 2623,
+    "id": 2710,
     "license": "MIT",
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 2602,
+        "id": 2689,
         "literals": [
           "solidity",
           "^",
@@ -343,25 +344,25 @@
         "contractKind": "library",
         "documentation": null,
         "fullyImplemented": true,
-        "id": 2622,
+        "id": 2709,
         "linearizedBaseContracts": [
-          2622
+          2709
         ],
         "name": "VEventLibrary",
         "nodeType": "ContractDefinition",
         "nodes": [
           {
             "canonicalName": "VEventLibrary.VEvent",
-            "id": 2621,
+            "id": 2708,
             "members": [
               {
                 "constant": false,
-                "id": 2604,
+                "id": 2691,
                 "mutability": "mutable",
                 "name": "dtstamp",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "109:12:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -370,7 +371,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2603,
+                  "id": 2690,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "109:4:4",
@@ -384,12 +385,12 @@
               },
               {
                 "constant": false,
-                "id": 2606,
+                "id": 2693,
                 "mutability": "mutable",
                 "name": "dtstart",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "131:12:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -398,7 +399,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2605,
+                  "id": 2692,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "131:4:4",
@@ -412,12 +413,12 @@
               },
               {
                 "constant": false,
-                "id": 2608,
+                "id": 2695,
                 "mutability": "mutable",
                 "name": "dtend",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "153:10:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -426,7 +427,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2607,
+                  "id": 2694,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "153:4:4",
@@ -440,12 +441,12 @@
               },
               {
                 "constant": false,
-                "id": 2610,
+                "id": 2697,
                 "mutability": "mutable",
                 "name": "summary",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "173:14:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -454,7 +455,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 2609,
+                  "id": 2696,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "173:6:4",
@@ -468,12 +469,12 @@
               },
               {
                 "constant": false,
-                "id": 2612,
+                "id": 2699,
                 "mutability": "mutable",
                 "name": "description",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "197:18:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -482,7 +483,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 2611,
+                  "id": 2698,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "197:6:4",
@@ -496,12 +497,12 @@
               },
               {
                 "constant": false,
-                "id": 2614,
+                "id": 2701,
                 "mutability": "mutable",
                 "name": "isallday",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "225:13:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -510,7 +511,7 @@
                   "typeString": "bool"
                 },
                 "typeName": {
-                  "id": 2613,
+                  "id": 2700,
                   "name": "bool",
                   "nodeType": "ElementaryTypeName",
                   "src": "225:4:4",
@@ -524,12 +525,12 @@
               },
               {
                 "constant": false,
-                "id": 2616,
+                "id": 2703,
                 "mutability": "mutable",
                 "name": "alldaystartdate",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "248:22:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -538,7 +539,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 2615,
+                  "id": 2702,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "248:6:4",
@@ -552,12 +553,12 @@
               },
               {
                 "constant": false,
-                "id": 2618,
+                "id": 2705,
                 "mutability": "mutable",
                 "name": "alldayenddate",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "280:20:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -566,7 +567,7 @@
                   "typeString": "string"
                 },
                 "typeName": {
-                  "id": 2617,
+                  "id": 2704,
                   "name": "string",
                   "nodeType": "ElementaryTypeName",
                   "src": "280:6:4",
@@ -580,12 +581,12 @@
               },
               {
                 "constant": false,
-                "id": 2620,
+                "id": 2707,
                 "mutability": "mutable",
                 "name": "uid",
                 "nodeType": "VariableDeclaration",
                 "overrides": null,
-                "scope": 2621,
+                "scope": 2708,
                 "src": "310:8:4",
                 "stateVariable": false,
                 "storageLocation": "default",
@@ -594,7 +595,7 @@
                   "typeString": "uint256"
                 },
                 "typeName": {
-                  "id": 2619,
+                  "id": 2706,
                   "name": "uint",
                   "nodeType": "ElementaryTypeName",
                   "src": "310:4:4",
@@ -609,12 +610,12 @@
             ],
             "name": "VEvent",
             "nodeType": "StructDefinition",
-            "scope": 2622,
+            "scope": 2709,
             "src": "85:322:4",
             "visibility": "public"
           }
         ],
-        "scope": 2623,
+        "scope": 2710,
         "src": "57:352:4"
       }
     ],
@@ -625,8 +626,8 @@
     "version": "0.6.12+commit.27d51765.Emscripten.clang"
   },
   "networks": {},
-  "schemaVersion": "3.0.23",
-  "updatedAt": "2020-08-14T15:17:38.344Z",
+  "schemaVersion": "3.2.3",
+  "updatedAt": "2020-08-15T14:23:47.724Z",
   "devdoc": {
     "kind": "dev",
     "methods": {},
