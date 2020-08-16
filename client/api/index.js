@@ -34,9 +34,9 @@ const allowCors = fn => async (req, res) => {
   return await fn(req, res)
 }
 
-async function getIcalEvent(userAddress) {
+async function getIcalEvent() {
 	let outputString = "";
-	outputString = await contract.getEventsIcal(userAddress);
+	outputString = await contract.getEventsIcal();
 	return outputString;
 }
 
