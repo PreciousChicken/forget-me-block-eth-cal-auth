@@ -34,14 +34,15 @@ const allowCors = fn => async (req, res) => {
   return await fn(req, res)
 }
 
-async function getIcalEvent() {
+async function getIcalEvent(userAddress) {
 	let outputString = "";
-	outputString = await contract.getEventsIcal();
+	outputString = await contract.getEventsIcal(userAddress);
 	return outputString;
 }
 
 const handler = (req, res) => {
-	getIcalEvent().then(cal => {return res.end(cal)});
+	const { address } = req.query;
+	getIcalEvent(address).then(cal => {return res.end(cal)});
 }
 
 module.exports = allowCors(handler)

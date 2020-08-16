@@ -34,6 +34,15 @@ contract CalAuth is Ownable, AccessControl {
             "User not authorised");
         _;
     }
+    
+    modifier onlyRoleIcal(address _user) {
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, _user) ||
+            hasRole(USER_WRITE_ROLE, _user) ||
+            hasRole(USER_READ_ROLE, _user),
+            "User not authorised");
+        _;
+    }
 
     function storeEvent(
         uint _dtstamp,
@@ -61,7 +70,7 @@ contract CalAuth is Ownable, AccessControl {
         calStore.removeEvent(_dtstamp);
     }
 
-    function getEventsIcal() public view onlyRole(USER_READ_ROLE) returns (
+    function getEventsIcal(address _user) public view onlyRoleIcal(_user) returns (
         string memory) {
         return calStore.getEventsIcal();
     }
