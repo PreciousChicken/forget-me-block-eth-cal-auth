@@ -25,13 +25,13 @@ contract CalAuth is Ownable, AccessControl {
                 hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
                 hasRole(USER_WRITE_ROLE, msg.sender),
                 "User not authorised");
-            _;
+        } else {
+            require(
+                hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+                hasRole(USER_WRITE_ROLE, msg.sender) ||
+                hasRole(USER_READ_ROLE, msg.sender),
+                "User not authorised");
         }
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
-            hasRole(USER_WRITE_ROLE, msg.sender) ||
-            hasRole(USER_READ_ROLE, msg.sender),
-            "User not authorised");
         _;
     }
     
@@ -61,6 +61,24 @@ contract CalAuth is Ownable, AccessControl {
             _isallday, _alldaystartdate,
             _alldayenddate);
     }
+    
+    // function storeEvent(
+    //     uint _dtstamp,
+    //     uint _dtstart,
+    //     uint _dtend,
+    //     string memory _summary,
+    //     string memory _description,
+    //     bool _isallday,
+    //     string memory _alldaystartdate,
+    //     string memory _alldayenddate)
+    //     public 
+    //     {
+    //     calStore.storeEvent(
+    //         _dtstamp, _dtstart, _dtend,
+    //         _summary, _description,
+    //         _isallday, _alldaystartdate,
+    //         _alldayenddate);
+    // }
 
     function removeEvent(uint _dtstamp) public onlyRole(USER_WRITE_ROLE) {
         require(
@@ -132,23 +150,8 @@ contract CalAuth is Ownable, AccessControl {
     function justSayHiCalAuth() public pure returns (string memory) {
         return "Hi from CalAuth";
     }
+    function authHi() public pure returns (string memory) {
+        return "CalAuth Says Hi.  Correct.";
+    }
 }
 
-// CalAuth.deployed().then(function(instance) {app = instance})
-// let accounts = await web3.eth.getAccounts()
-// app.ownerWelcomeString()
-// app.addRead("0x918FD928864B6c0fFf58829Ccd7f92B0020Ae68B", {from: accounts[1]});
-// app.addRead(accounts[1]);
-// app.userReadWelcomeString({from: accounts[1]});
-// app.hasRole("USER_READ_ROLE",accounts[1]);
-
-
-
-// hashed = await web3.utils.keccak256("USER_READ_ROLE")
-// undefined
-// app.hasRole(hashed,accounts[1]);
-// true
-// app.getRoleMemberCount(hashed);
-// BN { negative: 0, words: [ 1, <1 empty item> ], length: 1, red: null }
-
-// app.getRoleMember(hashed, 0)

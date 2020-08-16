@@ -185,18 +185,5 @@ contract CalStore  {
             return byte(uint8(_b) + 0x57);
         }
     }
-
 }
-
-// CalStore.deployed().then(function(instance) {app = instance})
-// CalAuth.deployed().then(function(instance) {app = instance})
-// let accounts = await web3.eth.getAccounts()
-
-// app.storeEvent(1595170930, 1596121200, 1596123000, "Meeting 1", "First Meeting", false, "", "");
-// app.storeEvent(1595171030, 1596290400, 1596295800, "Meeting 2", "Second Meeting");
-// app.getEventsObj({from: accounts[1]});
-// app.getEventsIcal({from: accounts[0]});
-// app.justSayHi();
-
-// get all accounts: web3.eth.getAccounts().then(console.log)
 

@@ -1,0 +1,33 @@
+
+// CalAuth.deployed().then(function(instance) {app = instance})
+// let accounts = await web3.eth.getAccounts()
+// app.ownerWelcomeString()
+// app.addRead("0x918FD928864B6c0fFf58829Ccd7f92B0020Ae68B", {from: accounts[1]});
+// app.addRead(accounts[1]);
+// app.userReadWelcomeString({from: accounts[1]});
+// app.hasRole("USER_READ_ROLE",accounts[1]);
+
+
+
+// hashed = await web3.utils.keccak256("USER_READ_ROLE")
+// undefined
+// app.hasRole(hashed,accounts[1]);
+// true
+// app.getRoleMemberCount(hashed);
+// BN { negative: 0, words: [ 1, <1 empty item> ], length: 1, red: null }
+
+// app.getRoleMember(hashed, 0)
+
+
+// CalStore.deployed().then(function(instance) {store = instance})
+// CalAuth.deployed().then(function(instance) {app = instance})
+// let accounts = await web3.eth.getAccounts()
+
+// app.storeEvent(1595170930, 1596121200, 1596123000, "Meeting 1", "First Meeting", false, "", "");
+// app.storeEvent(1595170950, 1596125200, 1596127000, "Meeting 3", "Third Meeting", false, "", "");
+// app.storeEvent(1595171030, 1596290400, 1596295800, "Meeting 2", "Second Meeting");
+// app.getEventsObj({from: accounts[1]});
+// app.getEventsIcal({from: accounts[0]});
+// app.justSayHi();
+
+// get all accounts: web3.eth.getAccounts().then(console.log)
