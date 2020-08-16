@@ -1,3 +1,5 @@
+require('dotenv').config({ path: '/home/gene/Programming/Websites/Precious_Chicken_Website/blog_code_demos/forget-me-block-eth-cal-auth/client/.env' }) // Store environment-specific variable from '.env' to process.env
+
 const path = require("path");
 
 /**

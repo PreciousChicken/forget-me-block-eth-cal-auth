@@ -45,3 +45,5 @@ package-lock.json
 
 # End of https://www.toptal.com/developers/gitignore/api/soliditytruffle,react
 
+#JDH
+truffle_deploy.txt
