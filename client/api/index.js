@@ -1,5 +1,5 @@
 var ethers = require('ethers');
-var CalStore = require('./CalStore.json');
+var CalStore = require('../src/contracts/CalAuth.json');
 
 // Ropsten details
 const network = "ropsten";
