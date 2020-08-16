@@ -41,8 +41,7 @@ async function getIcalEvent(userAddress) {
 }
 
 const handler = (req, res) => {
-	const address = "0x0B6ec2E55de5AEf9ED44F8EFf856e428420D8490";
-	getIcalEvent(address).then(cal => {return res.end(cal)});
+	getIcalEvent().then(cal => {return res.end(cal)});
 }
 
 module.exports = allowCors(handler)
