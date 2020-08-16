@@ -5,7 +5,7 @@ import Table from 'react-bootstrap/Table';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { ethers } from "ethers";
 import CalAuth from "../contracts/CalAuth.json";
-import CalAuthAddress from "../data/ContractAddress";
+// import CalAuthAddress from "../data/ContractAddress";
 import Roles from "./Roles";
 import SubmitButton from "./SubmitButton";
 import RevokeButton from "./RevokeButton";
@@ -17,7 +17,10 @@ let contractCalAuth;
 
 provider = new ethers.providers.Web3Provider(window.ethereum)
 signer = provider.getSigner();
-contractCalAuth = new ethers.Contract(CalAuthAddress, CalAuth.abi, signer);
+		contractCalAuth = new ethers.Contract(
+			process.env.REACT_APP_CALAUTH_ADDRESS, 
+			CalAuth.abi, 
+			signer);
 
 // Used by keccakToRole function
 const keccakADMIN = roleToUTFToKeccak(Roles.ADMIN.TXT);

@@ -12,7 +12,6 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-import CalAuthAddress from "../data/ContractAddress";
 
 
 let provider;
@@ -21,7 +20,11 @@ let contractCalAuth;
 
 provider = new ethers.providers.Web3Provider(window.ethereum)
 signer = provider.getSigner();
-contractCalAuth = new ethers.Contract(CalAuthAddress, CalAuth.abi, signer);
+contractCalAuth = new ethers.Contract(
+	process.env.REACT_APP_CALAUTH_ADDRESS, 
+	CalAuth.abi, 
+	signer);
+
 
 function UserCalendar() {
 	const localizer = momentLocalizer(moment);

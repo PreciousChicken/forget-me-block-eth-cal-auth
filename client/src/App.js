@@ -6,7 +6,6 @@ import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import AdminDashboard from './Components/AdminDashboard';
 import UserDashboard from './Components/UserDashboard';
-import CalAuthAddress from "./data/ContractAddress";
 import Roles from "./Components/Roles";
 
 let provider;
@@ -22,7 +21,10 @@ if (typeof window.ethereum !== 'undefined' || (typeof window.web3 !== 'undefined
 			provider = new ethers.providers.Web3Provider(window.ethereum)
 		);
 		signer = provider.getSigner();
-contractCalAuth = new ethers.Contract(CalAuthAddress, CalAuth.abi, signer);
+		contractCalAuth = new ethers.Contract(
+			process.env.REACT_APP_CALAUTH_ADDRESS, 
+			CalAuth.abi, 
+			signer);
 		noProviderAbort = false;
 	} catch(e) {
 		noProviderAbort = true;
