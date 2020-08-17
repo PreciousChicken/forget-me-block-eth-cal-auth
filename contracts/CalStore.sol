@@ -60,12 +60,12 @@ contract CalStore  {
     /// @notice Returns iCal string of message senders previously stored data
     /// @dev TODO: Return if no events?
     /// @return string iCalendar string iaw RFC 5545
-    function getEventsIcal() public view returns (string memory) {
+    function getEventsIcal(address _user) public view returns (string memory) {
         string memory outputString = "";
         string memory vCalHeader = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//preciouschicken.com//forget-me-block-eth-cal\nCALSCALE:GREGORIAN\n";
         string memory vCalFooter = "END:VCALENDAR\n";
-        VEventLibrary.VEvent[] memory ownerEvent = store[msg.sender];
-        string memory ownerStr = addressToStr(msg.sender);
+        VEventLibrary.VEvent[] memory ownerEvent = store[_user];
+        string memory ownerStr = addressToStr(_user);
 
         for (uint i = 0; i < ownerEvent.length; i++) {
             string memory dtstamp = unixTimeToStr(ownerEvent[i].dtstamp);

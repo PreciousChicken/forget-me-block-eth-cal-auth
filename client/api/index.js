@@ -1,5 +1,5 @@
 var ethers = require('ethers');
-var CalStore = require('../src/contracts/CalAuth.json');
+var CalAuth = require('../src/contracts/CalAuth.json');
 
 // Ropsten details
 const network = "ropsten";
@@ -12,7 +12,7 @@ const contractAddress = process.env.REACT_APP_CALAUTH_ADDRESS;
 // Connect to the network
 // We connect to the Contract using a Provider, so we will only
 // have read-only access to the Contract
-let contract = new ethers.Contract(contractAddress, CalStore.abi, provider);
+let contract = new ethers.Contract(contractAddress, CalAuth.abi, provider);
 
 
 // Allows CORS requests when using Vercel deployment

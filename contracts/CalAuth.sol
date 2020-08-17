@@ -73,7 +73,7 @@ contract CalAuth is Ownable, AccessControl {
 
     function getEventsIcal(address _user) public view onlyRoleIcal(_user) returns (
         string memory) {
-        return calStore.getEventsIcal();
+        return calStore.getEventsIcal(address(this));
     }
 
     function getEventsObj() public view onlyRole(USER_READ_ROLE) returns (
