@@ -58,7 +58,7 @@ contract CalStore  {
     }
 
     /// @notice Returns iCal string of message senders previously stored data
-    /// @dev TODO: Return if no events?
+    /// @param address of user or contract requesting events
     /// @return string iCalendar string iaw RFC 5545
     function getEventsIcal(address _user) public view returns (string memory) {
         string memory outputString = "";
