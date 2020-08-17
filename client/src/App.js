@@ -76,8 +76,8 @@ function App() {
 					</p>
 					<h1>Unauthorised</h1>
 
-					<span>You are not authorised to use this system.  Please contact admin@example.org if you believe this is a mistake.
-					</span>
+					<span>Account {walAddress} is not authorised to use this system.<br />  
+					Please contact admin@example.org if you believe this is a mistake.</span>
 					</Jumbotron>
 				);
 		}

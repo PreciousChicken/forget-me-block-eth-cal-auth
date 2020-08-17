@@ -9,7 +9,10 @@
 
 
 
-// hashed = await web3.utils.keccak256("USER_READ_ROLE")
+// read = await web3.utils.keccak256("USER_READ_ROLE")
+// admin = await web3.utils.keccak256("ADMIN")
+// write = await web3.utils.keccak256("USER_WRITE_ROLE")
+// defaultadmin = await web3.utils.keccak256("DEFAULT_ADMIN_ROLE")
 // undefined
 // app.hasRole(hashed,accounts[1]);
 // true

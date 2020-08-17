@@ -123,6 +123,7 @@ function AdminDashboard(props) {
 				setIsGranted(true); 
 				setPendingBlockchain(false);}))
 		.catch(err => {
+			console.log(err);
 				setErrorMsg(err.message);
 				setIsError(true); 
 				setPendingBlockchain(false);
@@ -183,7 +184,7 @@ function AdminDashboard(props) {
 		<h2>HealthPsy Group Eth-Cal Dashboard</h2>
 			<Alert variant="success" 
 			style={{position: 'relative'}}>
-		<span>Admin log on: {props.address}</span>
+		<span>Admin log on: {props.address}, </span>
 			</Alert>
 		<h3>Users with access:</h3>
 		{ writeMembers.length + readMembers.length + adminMembers.length > 0 ?  
@@ -243,7 +244,6 @@ function AdminDashboard(props) {
 		<Form.Control as="select" name="requestLevel">
 		<option value={Roles.USER_READ_ROLE.TXT}>Read-only</option>
 		<option value={Roles.USER_WRITE_ROLE.TXT}>Read-write</option>
-		<option value={Roles.ADMIN.TXT}>Admin</option>
 		</Form.Control>
 		</Form.Group>
 		<SubmitButton pending={pendingBlockchain} />

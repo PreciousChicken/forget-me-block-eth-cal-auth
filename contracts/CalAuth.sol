@@ -12,6 +12,7 @@ contract CalAuth is Ownable, AccessControl {
 
     bytes32 public constant USER_READ_ROLE = keccak256("USER_READ_ROLE");
     bytes32 public constant USER_WRITE_ROLE = keccak256("USER_WRITE_ROLE");
+    bytes32 public constant ADMIN = keccak256("ADMIN");
     CalStore private calStore;
 
     constructor(address _addr) public {
@@ -61,24 +62,6 @@ contract CalAuth is Ownable, AccessControl {
             _isallday, _alldaystartdate,
             _alldayenddate);
     }
-    
-    // function storeEvent(
-    //     uint _dtstamp,
-    //     uint _dtstart,
-    //     uint _dtend,
-    //     string memory _summary,
-    //     string memory _description,
-    //     bool _isallday,
-    //     string memory _alldaystartdate,
-    //     string memory _alldayenddate)
-    //     public 
-    //     {
-    //     calStore.storeEvent(
-    //         _dtstamp, _dtstart, _dtend,
-    //         _summary, _description,
-    //         _isallday, _alldaystartdate,
-    //         _alldayenddate);
-    // }
 
     function removeEvent(uint _dtstamp) public onlyRole(USER_WRITE_ROLE) {
         require(
@@ -109,6 +92,8 @@ contract CalAuth is Ownable, AccessControl {
     /// @return string user role
     function getUserRole() public view returns (string memory) {
         if (hasRole(DEFAULT_ADMIN_ROLE, msg.sender)) {
+            return "ADMIN";
+        } else if (hasRole(ADMIN, msg.sender)) {
             return "ADMIN";
         } else if (hasRole(USER_WRITE_ROLE, msg.sender)) {
             return "USER_WRITE_ROLE";
