@@ -64,7 +64,6 @@ function AdminDashboard(props) {
 		for (let i = 0; i < roleCount; ++i) {
 			members.push(await contractCalAuth.getRoleMember(role, i));
 		}
-		// console.log("readMembers", members[0]);
 		return members;
 	}
 
@@ -123,7 +122,6 @@ function AdminDashboard(props) {
 				setIsGranted(true); 
 				setPendingBlockchain(false);}))
 		.catch(err => {
-			console.log(err);
 				setErrorMsg(err.message);
 				setIsError(true); 
 				setPendingBlockchain(false);

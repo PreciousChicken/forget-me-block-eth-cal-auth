@@ -66,7 +66,6 @@ function App() {
 			case Roles.USER_WRITE_ROLE.TXT:
 				return (<UserDashboard address={walAddress} role={Roles.USER_WRITE_ROLE.HUMAN} />);
 			default:
-				console.log(walAddress);
 				return (
 					<Jumbotron>
 					<p>

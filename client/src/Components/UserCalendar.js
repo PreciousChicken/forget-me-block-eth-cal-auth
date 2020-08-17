@@ -161,7 +161,6 @@ function UserCalendar(props) {
 
 	// Opens Event add display dialog
 	function displayAddEvent(event) {
-		console.log("props", props.role);
 		if (props.role !== Roles.USER_READ_ROLE.HUMAN) {
 			setActiveEventStart(event.start);
 			setActiveEventEnd(event.end);
