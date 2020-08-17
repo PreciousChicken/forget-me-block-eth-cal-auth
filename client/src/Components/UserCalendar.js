@@ -12,7 +12,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-
+import Roles from "./Roles";
 
 let provider;
 let signer;
@@ -26,7 +26,7 @@ contractCalAuth = new ethers.Contract(
 	signer);
 
 
-function UserCalendar() {
+function UserCalendar(props) {
 	const localizer = momentLocalizer(moment);
 	const [userSummary, setUserSummary] = useState("");
 	const [userDesc, setUserDesc] = useState("");
@@ -161,9 +161,12 @@ function UserCalendar() {
 
 	// Opens Event add display dialog
 	function displayAddEvent(event) {
-		setActiveEventStart(event.start);
-		setActiveEventEnd(event.end);
-    setOpenAddDisplay(true);
+		console.log("props", props.role);
+		if (props.role !== Roles.USER_READ_ROLE.HUMAN) {
+			setActiveEventStart(event.start);
+			setActiveEventEnd(event.end);
+			setOpenAddDisplay(true);
+		}
 	}
 
 	// Opens Event view display dialog
@@ -181,7 +184,7 @@ function UserCalendar() {
 
 	return (
 		<main>
-		<div>
+		<p>
 		<Calendar
 		selectable
 		defaultView="week"
@@ -190,7 +193,7 @@ function UserCalendar() {
 		events={visibleEvents}
 		startAccessor="start"
 		endAccessor="end"
-		style={{ height: 500 }}
+		style={{ height: 500 }} 
 		onSelectSlot={displayAddEvent}
 		onSelectEvent={displayViewEvent}
 		eventPropGetter={
@@ -214,7 +217,7 @@ function UserCalendar() {
 		}
 
 		/>
-		</div>
+		</p>
 
 		{walAddress === '0x00'
 			?
@@ -246,9 +249,11 @@ function UserCalendar() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
+	{   (props.role !== Roles.USER_READ_ROLE.HUMAN) && 
           <Button onClick={deleteEvent} color="primary">
             Delete 
           </Button>
+	}
           <Button onClick={displayClose} color="primary" autoFocus>
             OK
           </Button>

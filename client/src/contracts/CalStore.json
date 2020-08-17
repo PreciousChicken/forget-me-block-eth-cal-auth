@@ -19979,12 +19979,12 @@
     "5777": {
       "events": {},
       "links": {},
-      "address": "0x2584141F8d399a8adE1dB71f959bB43ff3B86288",
-      "transactionHash": "0x2ec813acc5314c2654b00d10a50c3b2d503abb55534a56d3c26ba95b583f06c3"
+      "address": "0x1cDdb679b4D537dbD20610A6fc15d4345Dd059bE",
+      "transactionHash": "0x2ff160c1a2aef931566ff69b42b9a0db0f874a822e869a645043d75a6083d201"
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-08-16T18:39:57.271Z",
+  "updatedAt": "2020-08-17T09:14:46.162Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
