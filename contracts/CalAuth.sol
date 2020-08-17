@@ -76,6 +76,18 @@ contract CalAuth is Ownable, AccessControl {
         return calStore.getEventsIcal(address(this));
     }
 
+    function getEventsIcal(address _user, uint _validFrom) public view onlyRoleIcal(_user) returns (
+        string memory) {
+        return calStore.getEventsIcal(address(this), _validFrom);
+    }
+
+
+    function getEventsIcal(address _user, uint _validFrom, 
+        uint _expiresBy) public view onlyRoleIcal(_user) returns (
+        string memory) {
+        return calStore.getEventsIcal(address(this), _validFrom, _expiresBy);
+    }
+
     function getEventsObj() public view onlyRole(USER_READ_ROLE) returns (
         VEventLibrary.VEvent[] memory) {
         require(
@@ -85,7 +97,26 @@ contract CalAuth is Ownable, AccessControl {
             "User not authorised");
         return calStore.getEventsObj();
     }
+    
+    function getEventsObj(uint _validFrom) public view onlyRole(USER_READ_ROLE) returns (
+        VEventLibrary.VEvent[] memory) {
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+            hasRole(USER_WRITE_ROLE, msg.sender) ||
+            hasRole(USER_READ_ROLE, msg.sender),
+            "User not authorised");
+        return calStore.getEventsObj(_validFrom);
+    }
 
+    function getEventsObj(uint _validFrom, uint _expiresBy) public view onlyRole(USER_READ_ROLE) returns (
+        VEventLibrary.VEvent[] memory) {
+        require(
+            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+            hasRole(USER_WRITE_ROLE, msg.sender) ||
+            hasRole(USER_READ_ROLE, msg.sender),
+            "User not authorised");
+        return calStore.getEventsObj(_validFrom, _expiresBy);
+    }
 
     /// @notice Returns role of msg.sender
     /// @dev Returns in hierarchial order, e.g. ADMIN more important than READ etc

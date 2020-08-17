@@ -9,17 +9,19 @@ contract CalStore  {
     using BokkyPooBahsDateTimeLibrary for uint;
     using VEventLibrary for VEventLibrary.VEvent;
 
-
     mapping(address => VEventLibrary.VEvent[]) private store;
     mapping(address => uint) private count;
 
     function storeEvent(
-        uint _dtstamp, uint _dtstart, uint _dtend,
-        string memory _summary, string memory _description,
-        bool _isallday, string memory _alldaystartdate,
+        uint _dtstamp, 
+        uint _dtstart, 
+        uint _dtend,
+        string memory _summary, 
+        string memory _description,
+        bool _isallday, 
+        string memory _alldaystartdate,
         string memory _alldayenddate)
-        public
-        {
+        public {
         count[msg.sender]++;
         uint nextId = count[msg.sender];
         VEventLibrary.VEvent memory newEvent = VEventLibrary.VEvent(
@@ -53,41 +55,104 @@ contract CalStore  {
     }
 
     // TODO: Is this needed anywhere?  Can I remove?
-    function timestampToDateTime(uint timestamp) public pure returns (uint year, uint month, uint day, uint hour, uint minute, uint second) {
-        (year, month, day, hour, minute, second) = BokkyPooBahsDateTimeLibrary.timestampToDateTime(timestamp);
-    }
+    // function timestampToDateTime(uint timestamp) public pure returns (
+    //     uint year, 
+    //     uint month, 
+    //     uint day, uint hour, uint minute, uint second) {
+    //     (year, month, day, hour, minute, second) = BokkyPooBahsDateTimeLibrary.timestampToDateTime(timestamp);
+    // }
 
     /// @notice Returns iCal string of message senders previously stored data
-    /// @param address of user or contract requesting events
+    /// @param _user address of user or contract requesting events
     /// @return string iCalendar string iaw RFC 5545
     function getEventsIcal(address _user) public view returns (string memory) {
         string memory outputString = "";
-        string memory vCalHeader = "BEGIN:VCALENDAR\nVERSION:2.0\nPRODID:-//preciouschicken.com//forget-me-block-eth-cal\nCALSCALE:GREGORIAN\n";
-        string memory vCalFooter = "END:VCALENDAR\n";
         VEventLibrary.VEvent[] memory ownerEvent = store[_user];
         string memory ownerStr = addressToStr(_user);
 
         for (uint i = 0; i < ownerEvent.length; i++) {
-            string memory dtstamp = unixTimeToStr(ownerEvent[i].dtstamp);
-            string memory uid = uintToStr(ownerEvent[i].uid);
-            string memory summary = ownerEvent[i].summary;
-            string memory description = ownerEvent[i].description;
+            outputString = constructVEvent(ownerEvent[i], ownerStr, outputString);
+        }
+        return appendVCalHeader(outputString);
+    }
+
+    /// @notice Returns iCal string of message senders previously stored data
+    /// @return string iCalendar string iaw RFC 5545
+    function getEventsIcal(address _user, uint _validFrom) 
+    public 
+    view 
+    returns (string memory) {
+        string memory outputString = "";
+        VEventLibrary.VEvent[] memory ownerEvent = store[_user];
+        string memory ownerStr = addressToStr(_user);
+        for (uint i = 0; i < ownerEvent.length; i++) {
+            if (_validFrom <= ownerEvent[i].dtend) {
+                outputString = constructVEvent(ownerEvent[i], ownerStr, outputString);
+            }
+        }
+        return appendVCalHeader(outputString);
+    }
+
+    /// @notice Returns iCal string of message senders previously stored data
+    /// @return string iCalendar string iaw RFC 5545
+    function getEventsIcal(
+        address _user, 
+        uint _validFrom, 
+        uint _expiresBy) public view returns (string memory) {
+        string memory outputString = "";
+        VEventLibrary.VEvent[] memory ownerEvent = store[_user];
+        string memory ownerStr = addressToStr(_user);
+        for (uint i = 0; i < ownerEvent.length; i++) {
+            if ((_validFrom <= ownerEvent[i].dtend) && 
+                (_expiresBy >= ownerEvent[i].dtstart)) {
+                outputString = constructVEvent(ownerEvent[i], ownerStr, outputString);
+            }
+        }
+        return appendVCalHeader(outputString);
+    }
+
+    function appendVCalHeader(string memory _events) 
+    private 
+    pure 
+    returns (string memory) 
+    {
+        string memory vCalBegin = "BEGIN:VCALENDAR\nVERSION:2.0\n";
+        string memory vCalProdID = "PRODID:-//preciouschicken.com//forget-me-block-eth-cal\n";
+        string memory vCalCalScale = "CALSCALE:GREGORIAN\n";
+        string memory vCalFooter = "END:VCALENDAR\n";
+        return string(abi.encodePacked(
+            vCalBegin, 
+            vCalProdID, 
+            vCalCalScale, 
+            _events, 
+            vCalFooter));
+    }
+
+    function constructVEvent(
+        VEventLibrary.VEvent memory ownerEvent, 
+        string memory ownerStr, 
+        string memory outputString) 
+        private pure returns (string memory) {
+            string memory dtstamp = unixTimeToStr(ownerEvent.dtstamp);
+            string memory uid = uintToStr(ownerEvent.uid);
+            string memory summary = ownerEvent.summary;
+            string memory description = ownerEvent.description;
             string memory allday;
             string memory dtstart;
             string memory dtend;
             string memory utcmark;
-            if (ownerEvent[i].isallday) {
+            if (ownerEvent.isallday) {
                 allday = ";VALUE=DATE:";
-                dtstart = ownerEvent[i].alldaystartdate;
-                dtend = ownerEvent[i].alldayenddate;
+                dtstart = ownerEvent.alldaystartdate;
+                dtend = ownerEvent.alldayenddate;
                 utcmark = "";
             } else {
                 allday = ":";
-                dtstart = unixTimeToStr(ownerEvent[i].dtstart);
-                dtend = unixTimeToStr(ownerEvent[i].dtend);
+                dtstart = unixTimeToStr(ownerEvent.dtstart);
+                dtend = unixTimeToStr(ownerEvent.dtend);
                 utcmark = "Z";
             }
-            outputString = string(
+            return outputString = string(
                 abi.encodePacked(outputString,"BEGIN:VEVENT\n",
                                  "DTSTAMP:", dtstamp, "\n",
                                  "UID:", uid, "@", ownerStr, "\n",
@@ -98,10 +163,7 @@ contract CalStore  {
                                  "END:VEVENT\n"
                                 )
             );
-        }
-        return string(abi.encodePacked(vCalHeader, outputString, vCalFooter));
     }
-
 
     function unixTimeToStr(uint _unixTime) private pure returns (string memory) {
         return string(
@@ -132,6 +194,38 @@ contract CalStore  {
     function getEventsObj() public view returns (VEventLibrary.VEvent[] memory) {
         VEventLibrary.VEvent[] memory tempData = store[msg.sender];
         return tempData;
+    }
+    
+
+    function getEventsObj(uint _validFrom) 
+    public 
+    view 
+    returns (VEventLibrary.VEvent[] memory) {
+        VEventLibrary.VEvent[] memory tempData = store[msg.sender];
+        VEventLibrary.VEvent[] memory filteredData = 
+            new VEventLibrary.VEvent[](tempData.length);
+        for (uint i = 0; i < tempData.length; i++) {
+            if (_validFrom <= tempData[i].dtend) {
+                filteredData[i] = tempData[i];
+            }
+        }
+        return filteredData;
+    }
+
+    function getEventsObj(uint _validFrom, uint _expiresBy) 
+    public 
+    view 
+    returns (VEventLibrary.VEvent[] memory) {
+        VEventLibrary.VEvent[] memory tempData = store[msg.sender];
+        VEventLibrary.VEvent[] memory filteredData = 
+            new VEventLibrary.VEvent[](tempData.length);
+        for (uint i = 0; i < tempData.length; i++) {
+            if ((_validFrom <= tempData[i].dtend) && 
+                (_expiresBy >= tempData[i].dtstart)) {
+                filteredData[i] = tempData[i];
+            }
+        }
+        return filteredData;
     }
 
     /// @notice converts number to string

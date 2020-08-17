@@ -1,5 +1,6 @@
 
 // CalAuth.deployed().then(function(instance) {app = instance})
+// CalStore.deployed().then(function(instance) {app = instance})
 // let accounts = await web3.eth.getAccounts()
 // app.ownerWelcomeString()
 // app.addRead("0x918FD928864B6c0fFf58829Ccd7f92B0020Ae68B", {from: accounts[1]});
@@ -22,15 +23,21 @@
 // app.getRoleMember(hashed, 0)
 
 
-// CalStore.deployed().then(function(instance) {store = instance})
+// CalStore.deployed().then(function(instance) {app = instance})
 // CalAuth.deployed().then(function(instance) {app = instance})
 // let accounts = await web3.eth.getAccounts()
 
 // app.storeEvent(1595170930, 1596121200, 1596123000, "Meeting 1", "First Meeting", false, "", "");
 // app.storeEvent(1595170950, 1596125200, 1596127000, "Meeting 3", "Third Meeting", false, "", "");
 // app.storeEvent(1595171030, 1596290400, 1596295800, "Meeting 2", "Second Meeting");
-// app.getEventsObj({from: accounts[1]});
-// app.getEventsIcal({from: accounts[0]});
+// app.getEventsObj();
+// app.methods['getEventsObj()']();
+// app.methods['getEventsObj(uint256)'](1596123001);
+// app.methods['getEventsObj(uint256,uint256)'](1596121199,1596124000);
+// app.methods['getEventsIcal(address)'](accounts[0]);
+// app.methods['getEventsIcal(address,uint256)'](accounts[0],1596123001);
+// app.methods['getEventsIcal(address,uint256,uint256)'](accounts[0],1596121199,1596124000);
+
 // app.justSayHi();
 
 // get all accounts: web3.eth.getAccounts().then(console.log)
