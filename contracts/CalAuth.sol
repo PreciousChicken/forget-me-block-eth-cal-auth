@@ -80,55 +80,29 @@ contract CalAuth is Ownable, AccessControl {
 
     function getEventsIcal(address _user) public view onlyRoleIcal(_user) returns (
         string memory) {
-	    AccessWindow requestWindow = accessList[_user];
-	    if ((requestWindow.validFrom + requestWindow.expiresBy) == 0) {
-		    return calStore.getEventsIcal(address(this));
-	    } else if (requestWindow.expiresBy == 0) {
-		    return calStore.getEventsIcal(address(this), _validFrom);
-	    } else () {
-	    }
+        AccessWindow memory requestWindow = accessList[_user];
+        if ((requestWindow.validFrom + requestWindow.expiresBy) == 0) {
+            return calStore.getEventsIcal(address(this));
+        } else if (requestWindow.expiresBy == 0) {
+            return calStore.getEventsIcal(address(this), requestWindow.validFrom);
+        } else {
+            return calStore.getEventsIcal(address(this), requestWindow.validFrom, requestWindow.expiresBy);
+        }
     }
 
-    function getEventsIcal(address _user, uint _validFrom) public view onlyRoleIcal(_user) returns (
-        string memory) {
-        return calStore.getEventsIcal(address(this), _validFrom);
-    }
-
-
-    function getEventsIcal(address _user, uint _validFrom, 
-        uint _expiresBy) public view onlyRoleIcal(_user) returns (
-        string memory) {
-        return calStore.getEventsIcal(address(this), _validFrom, _expiresBy);
-    }
 
     function getEventsObj() public view onlyRole(USER_READ_ROLE) returns (
         VEventLibrary.VEvent[] memory) {
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
-            hasRole(USER_WRITE_ROLE, msg.sender) ||
-            hasRole(USER_READ_ROLE, msg.sender),
-            "User not authorised");
-        return calStore.getEventsObj();
-    }
-    
-    function getEventsObj(uint _validFrom) public view onlyRole(USER_READ_ROLE) returns (
-        VEventLibrary.VEvent[] memory) {
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
-            hasRole(USER_WRITE_ROLE, msg.sender) ||
-            hasRole(USER_READ_ROLE, msg.sender),
-            "User not authorised");
-        return calStore.getEventsObj(_validFrom);
-    }
-
-    function getEventsObj(uint _validFrom, uint _expiresBy) public view onlyRole(USER_READ_ROLE) returns (
-        VEventLibrary.VEvent[] memory) {
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
-            hasRole(USER_WRITE_ROLE, msg.sender) ||
-            hasRole(USER_READ_ROLE, msg.sender),
-            "User not authorised");
-        return calStore.getEventsObj(_validFrom, _expiresBy);
+            AccessWindow memory requestWindow = accessList[msg.sender];
+            if ((requestWindow.validFrom + requestWindow.expiresBy) == 0) {
+                return calStore.getEventsObj();
+            } else if (requestWindow.expiresBy == 0) {
+                return calStore.getEventsObj(requestWindow.validFrom);
+            } else {
+                return calStore.getEventsObj(
+                    requestWindow.validFrom, 
+                    requestWindow.expiresBy);
+            }
     }
 
     /// @notice Returns role of msg.sender
@@ -149,18 +123,17 @@ contract CalAuth is Ownable, AccessControl {
 
     function addRead(address _userAddress, uint _validFrom, uint _expiresBy) public onlyOwner {
         grantRole(USER_READ_ROLE, _userAddress);
-        // AccessWindow memory newAccess = new AccessWindow(_validFrom, _expiresBy);
         accessList[_userAddress] = AccessWindow(_validFrom, _expiresBy);
 
     }
 
     function addWrite(address _userAddress, uint _validFrom, uint _expiresBy) public onlyOwner {
         grantRole(USER_WRITE_ROLE, _userAddress);
-        // AccessWindow memory newAccess = new AccessWindow(_validFrom, _expiresBy);
         accessList[_userAddress] = AccessWindow(_validFrom, _expiresBy);
     }
 
     function getAccessWindow(address _userAddress) 
+    view
     public 
     returns (AccessWindow memory) {
 	return accessList[_userAddress];
