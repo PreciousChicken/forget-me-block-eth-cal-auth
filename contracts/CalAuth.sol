@@ -80,7 +80,13 @@ contract CalAuth is Ownable, AccessControl {
 
     function getEventsIcal(address _user) public view onlyRoleIcal(_user) returns (
         string memory) {
-        return calStore.getEventsIcal(address(this));
+	    AccessWindow requestWindow = accessList[_user];
+	    if ((requestWindow.validFrom + requestWindow.expiresBy) == 0) {
+		    return calStore.getEventsIcal(address(this));
+	    } else if (requestWindow.expiresBy == 0) {
+		    return calStore.getEventsIcal(address(this), _validFrom);
+	    } else () {
+	    }
     }
 
     function getEventsIcal(address _user, uint _validFrom) public view onlyRoleIcal(_user) returns (
@@ -141,18 +147,27 @@ contract CalAuth is Ownable, AccessControl {
         return "NIL";
     }
 
-    //TODO: Delete, not used
     function addRead(address _userAddress, uint _validFrom, uint _expiresBy) public onlyOwner {
         grantRole(USER_READ_ROLE, _userAddress);
-        AccessWindow tempAccess = new AccessWindow(_validFrom, _expiresBy);
-        accessList[_userAddress] = tempAccess;
+        // AccessWindow memory newAccess = new AccessWindow(_validFrom, _expiresBy);
+        accessList[_userAddress] = AccessWindow(_validFrom, _expiresBy);
 
     }
 
-    //TODO: Delete, not used
-    function addWrite(address userAddress) public onlyOwner {
-        grantRole(USER_WRITE_ROLE, userAddress);
+    function addWrite(address _userAddress, uint _validFrom, uint _expiresBy) public onlyOwner {
+        grantRole(USER_WRITE_ROLE, _userAddress);
+        // AccessWindow memory newAccess = new AccessWindow(_validFrom, _expiresBy);
+        accessList[_userAddress] = AccessWindow(_validFrom, _expiresBy);
     }
+
+    function getAccessWindow(address _userAddress) 
+    public 
+    returns (AccessWindow memory) {
+	return accessList[_userAddress];
+    }
+
+
+
 
     //TODO: Delete, not used
     function revokeRead(address userAddress) public onlyOwner {
