@@ -15,6 +15,13 @@ contract CalAuth is Ownable, AccessControl {
     bytes32 public constant ADMIN = keccak256("ADMIN");
     CalStore private calStore;
 
+    struct AccessWindow {
+        uint validFrom;
+        uint expiresBy;
+    }
+    
+    mapping(address => AccessWindow) private accessList;
+
     constructor(address _addr) public {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
         calStore = CalStore(_addr);
@@ -135,8 +142,11 @@ contract CalAuth is Ownable, AccessControl {
     }
 
     //TODO: Delete, not used
-    function addRead(address userAddress) public onlyOwner {
-        grantRole(USER_READ_ROLE, userAddress);
+    function addRead(address _userAddress, uint _validFrom, uint _expiresBy) public onlyOwner {
+        grantRole(USER_READ_ROLE, _userAddress);
+        AccessWindow tempAccess = new AccessWindow(_validFrom, _expiresBy);
+        accessList[_userAddress] = tempAccess;
+
     }
 
     //TODO: Delete, not used
@@ -154,18 +164,6 @@ contract CalAuth is Ownable, AccessControl {
         revokeRole(USER_WRITE_ROLE, userAddress);
     }
 
-    function userReadWelcomeString() public view returns (string memory) {
-        require(hasRole(USER_READ_ROLE, msg.sender), "Sorry you are not a READ user");
-        return "Welcome read only user";
-    }
-
-    function ownerWelcomeString() public onlyOwner view returns (string memory) {
-        return "Welcome owner";
-    }
-
-    function justSayHiCalAuth() public pure returns (string memory) {
-        return "Hi from CalAuth";
-    }
     function authHi() public pure returns (string memory) {
         return "CalAuth Says Hi.  Correct.";
     }
