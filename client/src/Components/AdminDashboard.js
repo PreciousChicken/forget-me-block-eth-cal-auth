@@ -1,4 +1,8 @@
 import React , { useState, useEffect  } from 'react';
+import moment from 'moment';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import Form from 'react-bootstrap/Form';
 import Alert from 'react-bootstrap/Alert';
 import Table from 'react-bootstrap/Table';
@@ -62,7 +66,26 @@ function AdminDashboard(props) {
 		const roleCount = await contractCalAuth.getRoleMemberCount(role);
 		const members = [];
 		for (let i = 0; i < roleCount; ++i) {
-			members.push(await contractCalAuth.getRoleMember(role, i));
+			let newAddress = await contractCalAuth.getRoleMember(role, i);
+			let accessWindow = await contractCalAuth.getAccessWindow(newAddress);
+			let newValidFrom, newExpiresBy;
+			if (accessWindow.validFrom.toString() === "0") {
+				newValidFrom = "N/A";
+			} else {
+				newValidFrom = moment.unix(accessWindow.validFrom.toString()).format("D MMM YY");
+			}
+			if (accessWindow.expiresBy.toString() === "0") {
+				newExpiresBy = "N/A";
+			} else {
+				newExpiresBy = moment.unix(accessWindow.expiresBy.toString()).format("D MMM YY");
+			}
+			let newMember = {
+				address: newAddress,
+				validFrom: newValidFrom,
+				expiresBy: newExpiresBy
+			}
+
+			members.push(newMember);
 		}
 		return members;
 	}
@@ -101,6 +124,13 @@ function AdminDashboard(props) {
 		return false;
 	}
 
+	function windowToUnix(window) {
+		if (window) {
+			return moment(window).unix();
+		}
+		return 0;
+	}
+
 	function formSubmit(event) {
 		setIsGranted(false); 
 		setIsError(false); 
@@ -108,13 +138,19 @@ function AdminDashboard(props) {
 		const grantAccess = new FormData(event.target);
 		const requesteeAddress = grantAccess.get('requestAddress');
 		let requesteeLevel = grantAccess.get('requestLevel');
+		let validFrom = windowToUnix(grantAccess.get('validFrom'));
+		let expiresBy = windowToUnix(grantAccess.get('expiresBy'));
 		requesteeLevel = roleToUTFToKeccak(requesteeLevel);
 		if(verifyDuplicate(requesteeAddress)) {
 				setErrorMsg("Duplicate address. Address already authorised.");
 				setIsError(true); 
 				setPendingBlockchain(false);
 		} else {
-		contractCalAuth.grantRole(requesteeLevel, requesteeAddress)
+		contractCalAuth.grantRoleAccess(
+			requesteeLevel, 
+				requesteeAddress, 
+				validFrom, 
+				expiresBy)
 			.then(contractCalAuth.on("RoleGranted", (role, account,sender) => {
 				setGrantedRole(keccakToRole(role));
 				setGrantedAccount(account);
@@ -123,6 +159,9 @@ function AdminDashboard(props) {
 				setPendingBlockchain(false);}))
 		.catch(err => {
 				setErrorMsg(err.message);
+			if(err.data.message) {
+				setErrorMsg(err.data.message);
+			}
 				setIsError(true); 
 				setPendingBlockchain(false);
 			})
@@ -191,18 +230,18 @@ function AdminDashboard(props) {
       <tr>
       <th>Level</th>
       <th>Address</th>
-      <th>Valid from</th>
-      <th>Expires by</th>
+      <th>Viewable from</th>
+      <th>Viewable until</th>
       <th>Revoke</th>
       </tr>
       </thead>
       <tbody>
       {adminMembers.map(member => 
-         <tr key={member}>
+         <tr key={member.address}>
          <td>{Roles.ADMIN.HUMAN}</td>
-         <td>{member}</td>
-         <td>Hello</td>
-         <td>Hello</td>
+         <td>{member.address.slice(0,6)}...{member.address.slice(38)}</td>
+         <td>{member.validFrom}</td>
+         <td>{member.expiresBy}</td>
 				<td>
 				<RevokeButton role={Roles.ADMIN.TXT} pending={pendingRevoke} 
 				address={member} revokeAcc={revokeAccess}/>
@@ -210,11 +249,11 @@ function AdminDashboard(props) {
          </tr>
       )}
       {writeMembers.map(member => 
-         <tr key={member}>
+         <tr key={member.address}>
          <td>{Roles.USER_WRITE_ROLE.HUMAN}</td>
-				<td>{member}</td>
-         <td>Hello</td>
-         <td>Hello</td>
+         <td>{member.address.slice(0,6)}...{member.address.slice(38)}</td>
+         <td>{member.validFrom}</td>
+         <td>{member.expiresBy}</td>
 				<td>
 				<RevokeButton role={Roles.USER_WRITE_ROLE.TXT} pending={pendingRevoke}
 				address={member} revokeAcc={revokeAccess}/>
@@ -222,11 +261,11 @@ function AdminDashboard(props) {
 				</tr>
 			)}
 		{readMembers.map(member => 
-         <tr key={member}>
+         <tr key={member.address}>
          <td>{Roles.USER_READ_ROLE.HUMAN}</td>
-         <td>{member}</td>
-         <td>Hello</td>
-         <td>Hello</td>
+         <td>{member.address.slice(0,6)}...{member.address.slice(38)}</td>
+         <td>{member.validFrom}</td>
+         <td>{member.expiresBy}</td>
 				<td>
 				<RevokeButton role={Roles.USER_READ_ROLE.TXT} pending={pendingRevoke}
 				address={member} revokeAcc={revokeAccess}/>
@@ -240,9 +279,10 @@ function AdminDashboard(props) {
 
 		<h3>Grant access:</h3>
 		<div>
+		<Container>
 		<Form onSubmit={formSubmit}>
 		<Form.Group controlId="formGroupAddress">
-		<Form.Label>User address</Form.Label>
+		<Form.Label>User address:</Form.Label>
 		<Form.Control name="requestAddress" placeholder="Enter address 0x..." required  pattern="0x[a-zA-Z0-9]{40}" />
 		</Form.Group>
 		<Form.Group controlId="formGroupAccess">
@@ -252,8 +292,23 @@ function AdminDashboard(props) {
 		<option value={Roles.USER_WRITE_ROLE.TXT}>Read-write</option>
 		</Form.Control>
 		</Form.Group>
+		<Form.Group controlId="accessWindow">
+		<Row>
+		<Col>
+		<Form.Label>Viewable from:</Form.Label>
+		<br/>
+		<input type="date" id="validFrom" name="validFrom" style={{color: "#495057"}}/>
+		</Col>
+		<Col>
+		<Form.Label>Viewable until:</Form.Label>
+		<br/>
+		<input type="date" id="expiresBy" name="expiresBy" style={{color: "#495057"}}/>
+		</Col>
+		</Row>
+		</Form.Group>
 		<SubmitButton pending={pendingBlockchain} />
 		</Form>
+		</Container>
 		<ErrorAlert />
 		<GrantedAlert />
 		</div>
@@ -263,3 +318,4 @@ function AdminDashboard(props) {
 
 export default AdminDashboard;
 
+// color: #495057;

@@ -63,6 +63,11 @@ contract CalAuth is Ownable, AccessControl {
         string memory _alldayenddate)
         public onlyRole(USER_WRITE_ROLE)
         {
+        AccessWindow memory requestWindow = accessList[msg.sender];
+        require(requestWindow.validFrom <= _dtend, "Earlier than viewable period");
+        require((requestWindow.expiresBy >= _dtstart) && 
+        (requestWindow.expiresBy != 0), 
+        "Later than viewable period");
         calStore.storeEvent(
             _dtstamp, _dtstart, _dtend,
             _summary, _description,
@@ -121,16 +126,19 @@ contract CalAuth is Ownable, AccessControl {
         return "NIL";
     }
 
-    function addRead(address _userAddress, uint _validFrom, uint _expiresBy) public onlyOwner {
-        grantRole(USER_READ_ROLE, _userAddress);
-        accessList[_userAddress] = AccessWindow(_validFrom, _expiresBy);
+    function grantRoleAccess(
+        bytes32 _role, 
+        address _userAddress, 
+        uint _validFrom, 
+        uint _expiresBy) 
+        public onlyOwner {
+            require((_validFrom < _expiresBy) ||
+                    ((_validFrom + _expiresBy) == 0), 
+            "Viewable from later than viewable until");
+            grantRole(_role, _userAddress);
+            accessList[_userAddress] = AccessWindow(_validFrom, _expiresBy);
 
-    }
-
-    function addWrite(address _userAddress, uint _validFrom, uint _expiresBy) public onlyOwner {
-        grantRole(USER_WRITE_ROLE, _userAddress);
-        accessList[_userAddress] = AccessWindow(_validFrom, _expiresBy);
-    }
+        }
 
     function getAccessWindow(address _userAddress) 
     view
@@ -138,9 +146,6 @@ contract CalAuth is Ownable, AccessControl {
     returns (AccessWindow memory) {
 	return accessList[_userAddress];
     }
-
-
-
 
     //TODO: Delete, not used
     function revokeRead(address userAddress) public onlyOwner {

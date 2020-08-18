@@ -5,6 +5,7 @@ import 'react-big-calendar/lib/css/react-big-calendar.css';
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import { Button } from '@material-ui/core';
 import { ethers } from "ethers";
+import Alert from 'react-bootstrap/Alert';
 import CalAuth from "../contracts/CalAuth.json";
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -41,6 +42,8 @@ function UserCalendar(props) {
 	const [activeEventAllDay, setActiveEventAllDay] = useState(false);
 	const [visibleEvents, setVisibleEvents] = useState([]);
 	const [synchronisingEvents, setSyncEvents] = useState([]);
+	const [isError, setIsError] = useState(false);
+	const [errorMsg, setErrorMsg] = useState("Unknown");
 
 	// Updates React with blockchain events and wallet address on page opening
 	useEffect(() => {
@@ -95,6 +98,17 @@ function UserCalendar(props) {
 		this.isMine = true;
 	}
 
+	// // Notification to user of blockchain error
+	const ErrorAlert = () => {
+		if (!isError) return null;
+		return (
+			<Alert key="error" variant="danger" 
+			style={{position: 'relative', top: 5}}>
+			Error: {errorMsg}
+			</Alert>
+		);
+			 // style={{position: "absolute", right: "500px", bottom: "100px"}}
+	};
 	// Adds event when dropped on React calendar
 	function addEvent() {
 		// const title = window.prompt('New Event name');
@@ -130,7 +144,11 @@ function UserCalendar(props) {
 				newEvent.allDay,
 				allDayStartDate, // Required as unix time has UTC offset
 				allDayEndDate // Required as unix time has UTC offset
-			).catch(err => alert("Error connecting to blockchain. " + err.message))
+			).catch(err => {
+				setErrorMsg(err.data.message);
+				setIsError(true);
+				// alert("Error connecting to blockchain. " + err.message)
+			});
 	}
 
 	// Deletes event when deleted on React calendar
@@ -143,17 +161,23 @@ function UserCalendar(props) {
 			}
 		}
 		setSyncEvents(deletionsArray);
-		contractCalAuth.removeEvent(activeEventId).catch(err => alert("Error connecting to blockchain. " + err.message));
+		contractCalAuth.removeEvent(activeEventId).catch(err => {
+			setErrorMsg(err.message);
+			setIsError(true);
+			// alert("Error connecting to blockchain. " + err.message)
+		});
 	}
 
 	// Closes Event display dialog
 	function displayClose() {
+		setIsError(false);
 		setOpenAddDisplay(false);
 		setOpenViewDisplay(false);
 	}
 
 
 	function displayAddEventOK() {
+		setIsError(false);
 		addEvent();
 		setOpenAddDisplay(false);
 		setOpenViewDisplay(false);
@@ -161,6 +185,7 @@ function UserCalendar(props) {
 
 	// Opens Event add display dialog
 	function displayAddEvent(event) {
+		setIsError(false);
 		if (props.role !== Roles.USER_READ_ROLE.HUMAN) {
 			setActiveEventStart(event.start);
 			setActiveEventEnd(event.end);
@@ -170,13 +195,14 @@ function UserCalendar(props) {
 
 	// Opens Event view display dialog
 	function displayViewEvent(event) {
+		setIsError(false);
 		setActiveEventId(event.id);
 		setActiveEventTitle(event.title);
 		setActiveEventDesc(event.description);
 		setActiveEventStart(event.start);
 		setActiveEventEnd(event.end);
 		setActiveEventAllDay(event.allDay);
-    setOpenViewDisplay(true);
+		setOpenViewDisplay(true);
 	}
 
 
@@ -216,6 +242,7 @@ function UserCalendar(props) {
 		}
 
 		/>
+		<ErrorAlert />
 		</p>
 
 		{walAddress === '0x00'
