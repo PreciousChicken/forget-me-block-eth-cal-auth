@@ -137,21 +137,21 @@ function AdminDashboard(props) {
 		let expiresBy = windowToUnix(grantAccess.get('expiresBy'));
 		requesteeLevel = roleToUTFToKeccak(requesteeLevel);
 		if(verifyDuplicate(requesteeAddress)) {
-				setErrorMsg("Duplicate address. Address already authorised.");
-				setIsError(true); 
-				setPendingBlockchain(false);
+			setErrorMsg("Duplicate address. Address already authorised.");
+			setIsError(true); 
+			setPendingBlockchain(false);
 		} else {
-		contractCalAuth.grantRoleAccess(
-			requesteeLevel, 
+			contractCalAuth.grantRoleAccess(
+				requesteeLevel, 
 				requesteeAddress, 
 				validFrom, 
 				expiresBy)
-			.then(contractCalAuth.on("RoleGranted", (role, account,sender) => {
-				setGrantedRole(keccakToRole(role));
-				setGrantedAccount(account);
-				setAlertHeading("Access granted");
-				setIsGranted(true); 
-				setPendingBlockchain(false);}))
+				.then(contractCalAuth.on("RoleGranted", (role, account,sender) => {
+					setGrantedRole(keccakToRole(role));
+					setGrantedAccount(account);
+					setAlertHeading("Access granted");
+					setIsGranted(true); 
+					setPendingBlockchain(false);}))
 				.catch(err => {
 					setErrorMsg(err.message);
 					if(typeof err.data !== 'undefined') {
