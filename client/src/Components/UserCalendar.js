@@ -145,8 +145,10 @@ function UserCalendar(props) {
 				allDayStartDate, // Required as unix time has UTC offset
 				allDayEndDate // Required as unix time has UTC offset
 			).catch(err => {
-				setErrorMsg(err.data.message);
-				setIsError(true);
+					setErrorMsg(err.message);
+					if(typeof err.data !== 'undefined') {
+						setErrorMsg(err.data.message);
+					}
 				// alert("Error connecting to blockchain. " + err.message)
 			});
 	}

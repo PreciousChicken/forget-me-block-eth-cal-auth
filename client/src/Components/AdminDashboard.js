@@ -239,7 +239,7 @@ function AdminDashboard(props) {
          <td>{member.expiresBy}</td>
 				<td>
 				<RevokeButton role={Roles.ADMIN.TXT} pending={pendingRevoke} 
-				address={member} revokeAcc={revokeAccess}/>
+				address={member.address} revokeAcc={revokeAccess}/>
 				</td>
          </tr>
       )}
@@ -251,7 +251,7 @@ function AdminDashboard(props) {
          <td>{member.expiresBy}</td>
 				<td>
 				<RevokeButton role={Roles.USER_WRITE_ROLE.TXT} pending={pendingRevoke}
-				address={member} revokeAcc={revokeAccess}/>
+				address={member.address} revokeAcc={revokeAccess}/>
 				</td>
 				</tr>
 			)}
@@ -263,7 +263,7 @@ function AdminDashboard(props) {
          <td>{member.expiresBy}</td>
 				<td>
 				<RevokeButton role={Roles.USER_READ_ROLE.TXT} pending={pendingRevoke}
-				address={member} revokeAcc={revokeAccess}/>
+				address={member.address} revokeAcc={revokeAccess}/>
 				</td>
          </tr>
       )}
