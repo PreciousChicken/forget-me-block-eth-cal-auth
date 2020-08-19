@@ -104,20 +104,15 @@ function AdminDashboard(props) {
 		getRoleMembership(keccakREAD).then(members => setReadMembers(members));
 		}, [pendingBlockchain, pendingRevoke]);
 
-	// Ensures address has not already been authorised
+	// Ensures no duplicated addresses
+	// e.g. address has not already been authorised
 	function verifyDuplicate(address) {
-		for (const member of adminMembers){
-			if (member === address) {
+		let completeMembers = adminMembers.concat(writeMembers, readMembers);
+		if (props.address === address) {
 				return true;
-			}
 		}
-		for (const member of writeMembers){
-			if (member === address) {
-				return true;
-			}
-		}
-		for (const member of readMembers){
-			if (member === address) {
+		for (const member of completeMembers){
+			if (member.address === address) {
 				return true;
 			}
 		}
@@ -157,14 +152,14 @@ function AdminDashboard(props) {
 				setAlertHeading("Access granted");
 				setIsGranted(true); 
 				setPendingBlockchain(false);}))
-		.catch(err => {
-				setErrorMsg(err.message);
-			if(err.data.message) {
-				setErrorMsg(err.data.message);
-			}
-				setIsError(true); 
-				setPendingBlockchain(false);
-			})
+				.catch(err => {
+					setErrorMsg(err.message);
+					if(typeof err.data !== 'undefined') {
+						setErrorMsg(err.data.message);
+					}
+					setIsError(true); 
+					setPendingBlockchain(false);
+				})
 		}
 		event.preventDefault();
 	}
