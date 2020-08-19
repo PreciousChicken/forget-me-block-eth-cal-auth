@@ -160,5 +160,9 @@ contract CalAuth is Ownable, AccessControl {
     function authHi() public pure returns (string memory) {
         return "CalAuth Says Hi.  Correct.";
     }
+
+    function close() public onlyOwner { //onlyOwner is custom modifier
+        selfdestruct(msg.sender); 
+    }// `owner` is the owners address
 }
 

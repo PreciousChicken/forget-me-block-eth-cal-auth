@@ -46,3 +46,43 @@
 // app.justSayHi();
 
 // get all accounts: web3.eth.getAccounts().then(console.log)
+
+
+TEST RUN
+unix times all UTC:
+const USER_WRITE_ROLE = ethers.utils.keccak256(
+			ethers.utils.toUtf8Bytes("USER_WRITE_ROLE"));
+instance.grantRoleAccess(USER_WRITE_ROLE, accounts[0], 0, 0),
+instance.grantRoleAccess(USER_WRITE_ROLE, accounts[1], 1596236400, 1598828400),
+
+
+
+// 0000 1 Aug
+1596236400 (Unix time)
+// 0000 31 Aug
+1598828400 (Unix time)
+
+3 Aug mtg: 1300 - 1400
+1596455000 stamp
+1596456000 (Unix time) until
+1596459600 (Unix time)
+Team Lunch, General Hospital Canteen
+
+// instance.storeEvent(1596455000, 1596456000, 1596459600, "Team Lunch", "General Hospital Canteen", false, "", "");
+
+4 Sept mtg 1000 - 1200
+1599210000 (Unix time) until
+1599174000 (Unix time)
+CBT Continuous Improvement
+Meeting Room 1
+
+// instance.storeEvent(1596455000, 1599210000, 1599174000, "CBT Continuous Improvement", "Meeting Room 1", false, "", "");
+
+10 Jul mtg 1800 - 1900
+1594400400 (Unix time)
+1594404000 (Unix time)
+Dr Green Leaving Drinks
+Fancy dress only
+
+
+// instance.storeEvent(1596455000, 1594400400, 1594404000, "Dr Green Leaving Drinks", "Fancy dress only", false, "", "");
