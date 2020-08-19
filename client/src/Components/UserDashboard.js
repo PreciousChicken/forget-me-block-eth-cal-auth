@@ -4,13 +4,6 @@ import AccessLevel from "./AccessLevel";
 
 function UserDashboard(props) {
 
-
-	// function AccessLevel() {
-	// 	return (<Alert variant="success"
-	// 		style={{position: 'relative'}}>
-	// 	<span>{props.role} log on: {props.address}</span>
-	// 		</Alert>);
-	// }
 	return (	
 		<div>
 		<h2>HealthPsy Group Eth-Cal</h2>

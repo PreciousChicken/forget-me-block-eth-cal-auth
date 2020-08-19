@@ -65,7 +65,7 @@ contract CalAuth is Ownable, AccessControl {
         {
         AccessWindow memory requestWindow = accessList[msg.sender];
         require(requestWindow.validFrom <= _dtend, "Earlier than viewable period");
-        require((requestWindow.expiresBy >= _dtstart) && 
+        require((requestWindow.expiresBy >= _dtstart) || 
         (requestWindow.expiresBy != 0), 
         "Later than viewable period");
         calStore.storeEvent(
