@@ -146,11 +146,9 @@ function UserCalendar(props) {
 				allDayEndDate // Required as unix time has UTC offset
 			).catch(err => {
 				setIsError(true);
-				setErrorMsg(err.message);
-				console.log("err.message", err.message);
+				setErrorMsg("Permission denied, failed to record to blockchain.");
 				if(typeof err.data !== 'undefined') {
 					setErrorMsg(err.data.message);
-					console.log("err.data.message", err.data.message);
 				}
 			});
 	}
