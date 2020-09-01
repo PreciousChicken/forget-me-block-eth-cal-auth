@@ -7,6 +7,9 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "./CalStore.sol";
 import "./VEventLibrary.sol";
 
+/// @title Forget-me-block: Ethereum Calendar Authentication
+/// @author PreciousChicken
+/// @notice preciouschicken.com/blog/posts/forget-me-block-eth-cal/
 contract CalAuth is Ownable, AccessControl {
     using VEventLibrary for VEventLibrary.VEvent;
 
@@ -52,6 +55,16 @@ contract CalAuth is Ownable, AccessControl {
         _;
     }
 
+    /// @notice Passes event to CalStore to store 
+    /// @dev Validation performed on dates 
+    /// @param _dtstamp unix timestamp RFC5545 definition 
+    /// @param _dtstart unix timestamp RFC5545 definition 
+    /// @param _dtend unix timestamp RFC5545 definition 
+    /// @param _summary unix timestamp RFC5545 definition 
+    /// @param _description unix timestamp RFC5545 definition 
+    /// @param _isallday boolean for all day event 
+    /// @param _alldaystartdate string of start date for all-day e.g. 19971102
+    /// @param _alldayenddate string of end date for all-day e.g. 19971103
     function storeEvent(
         uint _dtstamp,
         uint _dtstart,
@@ -76,6 +89,10 @@ contract CalAuth is Ownable, AccessControl {
             _alldayenddate);
     }
 
+    /// @notice Passes event to CalStore to remove 
+    /// @dev Assumes user cannot have more than one event with same dtstamp 
+    /// @dev Further testing of this assumption required
+    /// @param _dtstamp unix timestamp RFC5545 definition 
     function removeEvent(uint _dtstamp) public onlyRole(USER_WRITE_ROLE) {
         require(
             hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
@@ -84,6 +101,10 @@ contract CalAuth is Ownable, AccessControl {
         calStore.removeEvent(_dtstamp);
     }
 
+    /// @notice Returnes events from CalStore as string 
+    /// @dev Called by API, used in Email clients, not react-calendar
+    /// @param _user address of user, required as called by Outlook/Thunderbird 
+    /// @return string user role
     function getEventsIcal(address _user) public view onlyRoleIcal(_user) returns (
         string memory) {
         AccessWindow memory requestWindow = accessList[_user];
@@ -97,6 +118,9 @@ contract CalAuth is Ownable, AccessControl {
     }
 
 
+    /// @notice Returnes events from CalStore as object
+    /// @dev Called by web react-calendar
+    /// @return VEventLibrary.VEvent[] array of events
     function getEventsObj() public view onlyRole(USER_READ_ROLE) returns (
         VEventLibrary.VEvent[] memory) {
             AccessWindow memory requestWindow = accessList[msg.sender];
@@ -127,6 +151,12 @@ contract CalAuth is Ownable, AccessControl {
         return "NIL";
     }
 
+    /// @notice Grants access to role 
+    /// @dev Validation performed on dates 
+    /// @param _role role to be granted 
+    /// @param _userAddress address for new role
+    /// @param _validFrom unix date
+    /// @param _expiresBy unix date
     function grantRoleAccess(
         bytes32 _role, 
         address _userAddress, 
@@ -134,13 +164,16 @@ contract CalAuth is Ownable, AccessControl {
         uint _expiresBy) 
         public onlyOwner {
             require((_validFrom < _expiresBy) ||
-                    ((_validFrom + _expiresBy) == 0), 
+                    (_expiresBy == 0), 
             "Viewable from later than viewable until");
             grantRole(_role, _userAddress);
             accessList[_userAddress] = AccessWindow(_validFrom, _expiresBy);
+    }
 
-        }
-
+    /// @notice Shows viewable dates for selected user 
+    /// @dev Dates are viewFrom and expiresBy
+    /// @param _userAddress selected user
+    /// @return AccessWindow viewable date struct
     function getAccessWindow(address _userAddress) 
     view
     public 
@@ -148,22 +181,14 @@ contract CalAuth is Ownable, AccessControl {
 	return accessList[_userAddress];
     }
 
-    //TODO: Delete, not used
-    function revokeRead(address userAddress) public onlyOwner {
-        revokeRole(USER_READ_ROLE, userAddress);
+    /// @notice Transfers CalAuth ownership and access management 
+    /// @dev current owner is revoked ownership and admin
+    /// @param _newOwner address of new owner
+    function transferCalAuth(address _newOwner) public onlyOwner {
+        grantRole(DEFAULT_ADMIN_ROLE, _newOwner);
+        revokeRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        transferOwnership(_newOwner);
     }
 
-    //TODO: Delete, not used
-    function revokeWrite(address userAddress) public onlyOwner {
-        revokeRole(USER_WRITE_ROLE, userAddress);
-    }
-
-    function authHi() public pure returns (string memory) {
-        return "CalAuth Says Hi.  Correct.";
-    }
-
-    function close() public onlyOwner { //onlyOwner is custom modifier
-        selfdestruct(msg.sender); 
-    }// `owner` is the owners address
 }
 

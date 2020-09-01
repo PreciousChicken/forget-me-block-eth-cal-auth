@@ -12,6 +12,7 @@ import CalAuth from "../contracts/CalAuth.json";
 // import CalAuthAddress from "../data/ContractAddress";
 import Roles from "./Roles";
 import SubmitButton from "./SubmitButton";
+import TransferButton from "./TransferButton";
 import RevokeButton from "./RevokeButton";
 import 'bootstrap/dist/css/bootstrap.min.css';
 
@@ -42,6 +43,7 @@ function AdminDashboard(props) {
 	const [grantedRole, setGrantedRole] = useState();
 	const [grantedAccount, setGrantedAccount] = useState("0x00");
 	const [pendingBlockchain, setPendingBlockchain] = useState(false);
+	const [pendingTransfer, setPendingTransfer] = useState(false);
 	const [adminMembers, setAdminMembers] = useState([]);
 	const [writeMembers, setWriteMembers] = useState([]);
 	const [readMembers, setReadMembers] = useState([]);
@@ -164,6 +166,30 @@ function AdminDashboard(props) {
 		event.preventDefault();
 	}
 
+	function transferSubmit(event) {
+		setIsGranted(false); 
+		setIsError(false); 
+		setPendingTransfer(true);
+		const grantAccess = new FormData(event.target);
+		const requesteeAddress = grantAccess.get('requestAddress');
+			contractCalAuth.transferCalAuth(
+				requesteeAddress)
+				.then(contractCalAuth.on("OwnershipTransferred", (previousOwner, newOwner) => {
+					setGrantedRole("Owner");
+					setGrantedAccount(newOwner);
+					setAlertHeading("Ownership transferred");
+					setIsGranted(true); 
+					setPendingTransfer(false);}))
+				.catch(err => {
+					setErrorMsg(err.message);
+					if(typeof err.data !== 'undefined') {
+						setErrorMsg(err.data.message);
+					}
+					setIsError(true); 
+					setPendingTransfer(false);
+				})
+		event.preventDefault();
+	}
 	function revokeAccess(address, role) {
 		setPendingRevoke(address);
 		setIsGranted(false); 
@@ -272,8 +298,8 @@ function AdminDashboard(props) {
 			: 
 			<p>No users have access.</p> }
 
+		<p>
 		<h3>Grant access:</h3>
-		<div>
 		<Container>
 		<Form onSubmit={formSubmit}>
 		<Form.Group controlId="formGroupAddress">
@@ -304,9 +330,24 @@ function AdminDashboard(props) {
 		<SubmitButton pending={pendingBlockchain} />
 		</Form>
 		</Container>
+		</p>
+
+
+		<p>
+		<h3>Transfer ownership:</h3>
+		<p>Warning: All access rights will cease on transfer.</p>
+		<Container>
+		<Form onSubmit={transferSubmit}>
+		<Form.Group controlId="formGroupAddress">
+		<Form.Label>User address:</Form.Label>
+		<Form.Control name="requestAddress" placeholder="Enter address 0x..." required  pattern="0x[a-zA-Z0-9]{40}" />
+		</Form.Group>
+		<TransferButton pending={pendingTransfer} />
+		</Form>
+		</Container>
 		<ErrorAlert />
 		<GrantedAlert />
-		</div>
+		</p>
 		</div>
 	);
 }
