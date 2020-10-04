@@ -27,18 +27,28 @@ contract CalAuth is Ownable, AccessControl {
 
     constructor(address _addr) public {
         _setupRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        _setRoleAdmin(USER_READ_ROLE, ADMIN);
+        _setRoleAdmin(USER_WRITE_ROLE, ADMIN);
+        grantRole(ADMIN, msg.sender);
         calStore = CalStore(_addr);
     }
 
     modifier onlyRole(bytes32 _role) {
-        if (_role == USER_WRITE_ROLE) {
+        if (_role == ADMIN) {
             require(
                 hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+                hasRole(ADMIN, msg.sender),
+                "User not authorised");
+        } else if (_role == USER_WRITE_ROLE) {
+            require(
+                hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+                hasRole(ADMIN, msg.sender) ||
                 hasRole(USER_WRITE_ROLE, msg.sender),
                 "User not authorised");
         } else {
             require(
                 hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+                hasRole(ADMIN, msg.sender) ||
                 hasRole(USER_WRITE_ROLE, msg.sender) ||
                 hasRole(USER_READ_ROLE, msg.sender),
                 "User not authorised");
@@ -49,6 +59,7 @@ contract CalAuth is Ownable, AccessControl {
     modifier onlyRoleIcal(address _user) {
         require(
             hasRole(DEFAULT_ADMIN_ROLE, _user) ||
+            hasRole(ADMIN, msg.sender) ||
             hasRole(USER_WRITE_ROLE, _user) ||
             hasRole(USER_READ_ROLE, _user),
             "User not authorised");
@@ -94,10 +105,12 @@ contract CalAuth is Ownable, AccessControl {
     /// @dev Further testing of this assumption required
     /// @param _dtstamp unix timestamp RFC5545 definition 
     function removeEvent(uint _dtstamp) public onlyRole(USER_WRITE_ROLE) {
-        require(
-            hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
-            hasRole(USER_WRITE_ROLE, msg.sender),
-            "User not authorised");
+        // Require not required due to onlyRole?  Test this assumption.
+        // Remove when tested.
+        // require(
+        //     hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
+        //     hasRole(USER_WRITE_ROLE, msg.sender),
+        //     "User not authorised");
         calStore.removeEvent(_dtstamp);
     }
 
@@ -162,7 +175,7 @@ contract CalAuth is Ownable, AccessControl {
         address _userAddress, 
         uint _validFrom, 
         uint _expiresBy) 
-        public onlyOwner {
+        public onlyRole(ADMIN) {
             require((_validFrom < _expiresBy) ||
                     (_expiresBy == 0), 
             "Viewable from later than viewable until");
@@ -186,7 +199,9 @@ contract CalAuth is Ownable, AccessControl {
     /// @param _newOwner address of new owner
     function transferCalAuth(address _newOwner) public onlyOwner {
         grantRole(DEFAULT_ADMIN_ROLE, _newOwner);
+        grantRole(ADMIN, _newOwner);
         revokeRole(DEFAULT_ADMIN_ROLE, msg.sender);
+        revokeRole(ADMIN, msg.sender);
         transferOwnership(_newOwner);
     }
 

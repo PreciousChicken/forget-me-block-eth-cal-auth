@@ -311,6 +311,7 @@ function AdminDashboard(props) {
 		<Form.Control as="select" name="requestLevel">
 		<option value={Roles.USER_READ_ROLE.TXT}>Read-only</option>
 		<option value={Roles.USER_WRITE_ROLE.TXT}>Read-write</option>
+		<option value={Roles.ADMIN.TXT}>Admin</option>
 		</Form.Control>
 		</Form.Group>
 		<Form.Group controlId="accessWindow">

@@ -3,6 +3,7 @@ import { ethers } from "ethers";
 import CalAuth from "./contracts/CalAuth.json";
 import './App.css';
 import Container from 'react-bootstrap/Container';
+import Alert from 'react-bootstrap/Alert';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import AdminDashboard from './Components/AdminDashboard';
 import UserDashboard from './Components/UserDashboard';
@@ -85,6 +86,9 @@ function App() {
   return (
 		<main>
 		<Container>
+		<Alert variant="secondary">
+		Warning: This site is a design science artefact from a <a href="https://www.preciouschicken.com/blog/posts/forget-me-block-eth-cal/">research project</a>.  Any data entered is publically accessible and will eventually be deleted.
+</Alert>
 		<div>
 		<h1>Blankshire NHS Trust</h1> 
 		<div>
