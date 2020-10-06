@@ -334,6 +334,9 @@ function AdminDashboard(props) {
 		</p>
 
 
+		<Container>
+		<Row>
+		<Col>
 		<p>
 		<h3>Transfer ownership:</h3>
 		<p>Warning: All access rights will cease on transfer.</p>
@@ -349,6 +352,21 @@ function AdminDashboard(props) {
 		<ErrorAlert />
 		<GrantedAlert />
 		</p>
+		</Col>
+		<Col>
+		<p>
+		<h3>Delete all events:</h3>
+		<Container>
+		<Form onSubmit={transferSubmit}>
+		<TransferButton pending={pendingTransfer} />
+		</Form>
+		</Container>
+		<ErrorAlert />
+		<GrantedAlert />
+		</p>
+		</Col>
+		</Row>
+		</Container>
 		</div>
 	);
 }
