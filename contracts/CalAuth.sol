@@ -105,13 +105,17 @@ contract CalAuth is Ownable, AccessControl {
     /// @dev Further testing of this assumption required
     /// @param _dtstamp unix timestamp RFC5545 definition 
     function removeEvent(uint _dtstamp) public onlyRole(USER_WRITE_ROLE) {
-        // Require not required due to onlyRole?  Test this assumption.
+        // Require not required due to onlyRole?  TODO Test this assumption.
         // Remove when tested.
         // require(
         //     hasRole(DEFAULT_ADMIN_ROLE, msg.sender) ||
         //     hasRole(USER_WRITE_ROLE, msg.sender),
         //     "User not authorised");
         calStore.removeEvent(_dtstamp);
+    }
+
+    function deleteEvents() public onlyOwner {
+        calStore.deleteEvents();
     }
 
     /// @notice Returnes events from CalStore as string 
