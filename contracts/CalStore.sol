@@ -38,13 +38,14 @@ contract CalStore  {
     }
 
     /// @notice Deletes all events for user calender 
-    function deleteUserCalendar() public {
+    function deleteEvents() public {
         delete store[msg.sender];
+        count[msg.sender] = 0;
     }
 
     /// @notice Returns iCal string of message senders previously stored data
-    /// @param _user address of user or contract requesting events
-    /// @return string iCalendar string iaw RFC 5545
+    /// @dev assumes _dtstamp is unique.  TODO: Test for this
+    /// @param _dtstamp unix time of when event was created
     function removeEvent(uint _dtstamp) public {
         uint storeLen = store[msg.sender].length;
         for (uint i = 0; i < storeLen; i++) {
