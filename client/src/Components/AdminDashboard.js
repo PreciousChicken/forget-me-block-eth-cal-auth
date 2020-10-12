@@ -334,6 +334,7 @@ function AdminDashboard(props) {
 		</p>
 
 
+		<h2>Owner utilities:</h2>
 		<Container>
 		<Row>
 		<Col>
@@ -356,6 +357,7 @@ function AdminDashboard(props) {
 		<Col>
 		<p>
 		<h3>Delete all events:</h3>
+		<p>Warning: This will irrevocably delete all events previously saved.</p>
 		<Container>
 		<Form onSubmit={transferSubmit}>
 		<TransferButton pending={pendingTransfer} />
