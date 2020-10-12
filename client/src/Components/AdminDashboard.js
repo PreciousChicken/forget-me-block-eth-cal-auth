@@ -172,24 +172,55 @@ function AdminDashboard(props) {
 		setPendingTransfer(true);
 		const grantAccess = new FormData(event.target);
 		const requesteeAddress = grantAccess.get('requestAddress');
-			contractCalAuth.transferCalAuth(
-				requesteeAddress)
-				.then(contractCalAuth.on("OwnershipTransferred", (previousOwner, newOwner) => {
-					setGrantedRole("Owner");
-					setGrantedAccount(newOwner);
-					setAlertHeading("Ownership transferred");
-					setIsGranted(true); 
-					setPendingTransfer(false);}))
-				.catch(err => {
-					setErrorMsg(err.message);
-					if(typeof err.data !== 'undefined') {
-						setErrorMsg(err.data.message);
-					}
-					setIsError(true); 
-					setPendingTransfer(false);
-				})
+		//TODO: React needs to listen for deleting all Events, add a solidity event to this?
+		contractCalAuth.transferCalAuth(
+			requesteeAddress)
+			.then(contractCalAuth.on("OwnershipTransferred", (previousOwner, newOwner) => {
+				setGrantedRole("Owner");
+				setGrantedAccount(props.address);
+				setAlertHeading("All events deleted");
+				setIsGranted(true); 
+				setPendingTransfer(false);}))
+			.catch(err => {
+				setErrorMsg(err.message);
+				if(typeof err.data !== 'undefined') {
+					setErrorMsg(err.data.message);
+				}
+				setIsError(true); 
+				setPendingTransfer(false);
+			})
 		event.preventDefault();
 	}
+	
+	function deleteSubmit(event) {
+		setIsGranted(false); 
+		setIsError(false); 
+		setPendingTransfer(true);
+		const grantAccess = new FormData(event.target);
+		const requesteeAddress = grantAccess.get('requestAddress');
+		
+
+		contractCalAuth.deleteEvents(
+			requesteeAddress)
+			.then(contractCalAuth.on("OwnershipTransferred", (previousOwner, newOwner) => {
+				setGrantedRole("Owner");
+				setGrantedAccount(newOwner);
+				setAlertHeading("Ownership transferred");
+				setIsGranted(true); 
+				setPendingTransfer(false);}))
+			.catch(err => {
+				setErrorMsg(err.message);
+				if(typeof err.data !== 'undefined') {
+					setErrorMsg(err.data.message);
+				}
+				setIsError(true); 
+				setPendingTransfer(false);
+			})
+		event.preventDefault();
+	}
+
+
+
 	function revokeAccess(address, role) {
 		setPendingRevoke(address);
 		setIsGranted(false); 
@@ -359,7 +390,7 @@ function AdminDashboard(props) {
 		<h3>Delete all events:</h3>
 		<p>Warning: This will irrevocably delete all events previously saved.</p>
 		<Container>
-		<Form onSubmit={transferSubmit}>
+		<Form onSubmit={deleteSubmit}>
 		<TransferButton buttonText="Delete" pending={pendingTransfer} />
 		</Form>
 		</Container>
