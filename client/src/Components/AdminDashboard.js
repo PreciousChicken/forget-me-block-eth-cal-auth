@@ -347,7 +347,7 @@ function AdminDashboard(props) {
 		<Form.Label>User address:</Form.Label>
 		<Form.Control name="requestAddress" placeholder="Enter address 0x..." required  pattern="0x[a-zA-Z0-9]{40}" />
 		</Form.Group>
-		<TransferButton pending={pendingTransfer} />
+		<TransferButton pending={pendingTransfer} buttonText="Transfer" />
 		</Form>
 		</Container>
 		<ErrorAlert />
@@ -360,7 +360,7 @@ function AdminDashboard(props) {
 		<p>Warning: This will irrevocably delete all events previously saved.</p>
 		<Container>
 		<Form onSubmit={transferSubmit}>
-		<TransferButton pending={pendingTransfer} />
+		<TransferButton buttonText="Delete" pending={pendingTransfer} />
 		</Form>
 		</Container>
 		<ErrorAlert />

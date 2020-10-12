@@ -19,7 +19,7 @@ function TransferButton(props) {
 	} else {
 		return (
 			<Button variant="danger" type="submit" >
-			Transfer
+			{props.buttonText}
 			</Button> 
 		)
 	}
