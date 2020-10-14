@@ -201,7 +201,7 @@ function AdminDashboard(props) {
 		contractCalAuth.deleteEvents(
 			requesteeAddress)
 			.then(contractCalAuth.on("DeleteConfirmation", (sender) => {
-				setGrantedRole("Authorised by");
+				setGrantedRole("Owner");
 				setGrantedAccount(sender);
 				setAlertHeading("All events deleted");
 				setIsGranted(true); 
@@ -269,14 +269,16 @@ function AdminDashboard(props) {
 	return (
 		<div>
 		<h2>HealthPsy Group Eth-Cal Dashboard</h2>
-			<Alert variant="success" 
-			style={{position: 'relative'}}>
+		<ErrorAlert />
+		<GrantedAlert />
+		<Alert variant="success" 
+		style={{position: 'relative'}}>
 		<span>Admin log on: {props.address}</span>
-			</Alert>
+		</Alert>
 		<h3>Users with access:</h3>
 		{ writeMembers.length + readMembers.length + adminMembers.length > 0 ?  
-		   <Table striped bordered hover>
-      <thead>
+			<Table striped bordered hover>
+			<thead>
       <tr>
       <th>Level</th>
       <th>Address</th>
@@ -379,8 +381,6 @@ function AdminDashboard(props) {
 		<TransferButton pending={pendingTransfer} buttonText="Transfer" />
 		</Form>
 		</Container>
-		<ErrorAlert />
-		<GrantedAlert />
 		</p>
 		</Col>
 		<Col>
@@ -392,8 +392,6 @@ function AdminDashboard(props) {
 		<TransferButton buttonText="Delete" pending={pendingTransfer} />
 		</Form>
 		</Container>
-		<ErrorAlert />
-		<GrantedAlert />
 		</p>
 		</Col>
 		</Row>
