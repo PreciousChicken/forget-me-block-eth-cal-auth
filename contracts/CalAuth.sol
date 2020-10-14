@@ -18,6 +18,8 @@ contract CalAuth is Ownable, AccessControl {
     bytes32 public constant ADMIN = keccak256("ADMIN");
     CalStore private calStore;
 
+    event DeleteConfirmation(address sender);
+
     struct AccessWindow {
         uint validFrom;
         uint expiresBy;
@@ -116,6 +118,7 @@ contract CalAuth is Ownable, AccessControl {
 
     function deleteEvents() public onlyOwner {
         calStore.deleteEvents();
+	emit DeleteConfirmation(msg.sender);
     }
 
     /// @notice Returnes events from CalStore as string 

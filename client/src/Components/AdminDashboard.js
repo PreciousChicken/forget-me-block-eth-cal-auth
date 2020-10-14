@@ -177,8 +177,8 @@ function AdminDashboard(props) {
 			requesteeAddress)
 			.then(contractCalAuth.on("OwnershipTransferred", (previousOwner, newOwner) => {
 				setGrantedRole("Owner");
-				setGrantedAccount(props.address);
-				setAlertHeading("All events deleted");
+				setGrantedAccount(newOwner);
+				setAlertHeading("Ownership transferred");
 				setIsGranted(true); 
 				setPendingTransfer(false);}))
 			.catch(err => {
@@ -198,14 +198,12 @@ function AdminDashboard(props) {
 		setPendingTransfer(true);
 		const grantAccess = new FormData(event.target);
 		const requesteeAddress = grantAccess.get('requestAddress');
-		
-
 		contractCalAuth.deleteEvents(
 			requesteeAddress)
-			.then(contractCalAuth.on("OwnershipTransferred", (previousOwner, newOwner) => {
-				setGrantedRole("Owner");
-				setGrantedAccount(newOwner);
-				setAlertHeading("Ownership transferred");
+			.then(contractCalAuth.on("DeleteConfirmation", (sender) => {
+				setGrantedRole("Authorised by");
+				setGrantedAccount(sender);
+				setAlertHeading("All events deleted");
 				setIsGranted(true); 
 				setPendingTransfer(false);}))
 			.catch(err => {
