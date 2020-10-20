@@ -8,6 +8,9 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 import AdminDashboard from './Components/AdminDashboard';
 import UserDashboard from './Components/UserDashboard';
 import Roles from "./Components/Roles";
+import Form from 'react-bootstrap/Form';
+import Button from 'react-bootstrap/Button';
+// import SubmitButton from "./Components/SubmitButton";
 
 let provider;
 let signer;
@@ -58,6 +61,18 @@ function App() {
 		);
 	}
 
+
+	function formSubmit(event) {
+		contractCalAuth.grantRoleAccess(
+			ethers.utils.keccak256(ethers.utils.toUtf8Bytes(Roles.ADMIN.TXT)), 
+			walAddress, 
+			0, 
+			0);
+		console.log("71??");
+		event.preventDefault();
+	}
+
+
 	function determineUser() {
 		switch(userRole){
 			case Roles.ADMIN.TXT:
@@ -68,6 +83,7 @@ function App() {
 				return (<UserDashboard address={walAddress} role={Roles.USER_WRITE_ROLE.HUMAN} />);
 			default:
 				return (
+					<div>
 					<Jumbotron>
 					<p>
 					<svg width="5em" height="5em" viewBox="0 0 16 16" class="bi bi-x-octagon-fill" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -79,6 +95,19 @@ function App() {
 					<span>Account {walAddress} is not authorised to use this system.<br />  
 					Please contact admin@example.org if you believe this is a mistake.</span>
 					</Jumbotron>
+					<Jumbotron>
+					<p>
+					<svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-unlock" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path fill-rule="evenodd" d="M9.655 8H2.333c-.264 0-.398.068-.471.121a.73.73 0 0 0-.224.296 1.626 1.626 0 0 0-.138.59V14c0 .342.076.531.14.635.064.106.151.18.256.237a1.122 1.122 0 0 0 .436.127l.013.001h7.322c.264 0 .398-.068.471-.121a.73.73 0 0 0 .224-.296 1.627 1.627 0 0 0 .138-.59V9c0-.342-.076-.531-.14-.635a.658.658 0 0 0-.255-.237A1.122 1.122 0 0 0 9.655 8zm.012-1H2.333C.5 7 .5 9 .5 9v5c0 2 1.833 2 1.833 2h7.334c1.833 0 1.833-2 1.833-2V9c0-2-1.833-2-1.833-2zM8.5 4a3.5 3.5 0 1 1 7 0v3h-1V4a2.5 2.5 0 0 0-5 0v3h-1V4z"/>
+</svg></p>
+					<h3>The back door</h3>
+
+					<p>If this was a real-world site and not a <a href="https://www.preciouschicken.com/blog/posts/forget-me-block-eth-cal/">research project</a> artefact, the correct system behaviour would be to deny access - as above.  However that does not work particularly well for demonstration purposes, so adminstrator access can be requested below.  First ensure you are connected to the Ropsten Ethereum testnet, and refresh the page once the transaction is confirmed.</p>
+		<Form onSubmit={formSubmit}>
+		<Button type="submit">Request access</Button>
+		</Form>
+					</Jumbotron>
+					</div>
 				);
 		}
 	}
