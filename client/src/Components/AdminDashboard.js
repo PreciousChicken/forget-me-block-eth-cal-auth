@@ -245,6 +245,7 @@ function AdminDashboard(props) {
 	const GrantedAlert = () => {
 		if (!isGranted) return null;
 		return (
+			// TODO: Alter to floating centre top
 			<Alert key="pending" variant="info" 
 			style={{position: 'relative', top: 5}}>
 			<Alert.Heading>{alertHeading}</Alert.Heading>
@@ -258,8 +259,13 @@ function AdminDashboard(props) {
 	const ErrorAlert = () => {
 		if (!isError) return null;
 		return (
+			// TODO: Alter to floating centre top
 			<Alert key="error" variant="danger" 
-			style={{position: 'relative', top: 5}}>
+			// style={{position: 'relative', top: 5}}
+			style={{
+				position: 'fixed',
+					top: 5, }}
+			>
 			Error: {errorMsg}
 			</Alert>
 		);
@@ -269,7 +275,8 @@ function AdminDashboard(props) {
 	return (
 		<div>
 		<h2>HealthPsy Group Eth-Cal Dashboard</h2>
-		<ErrorAlert />
+		// TODO: Bug: Both of these can appear at same point when new admin added.
+		<ErrorAlert  />
 		<GrantedAlert />
 		<Alert variant="success" 
 		style={{position: 'relative'}}>

