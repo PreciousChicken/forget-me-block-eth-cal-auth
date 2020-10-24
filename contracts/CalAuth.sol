@@ -212,5 +212,12 @@ contract CalAuth is Ownable, AccessControl {
         transferOwnership(_newOwner);
     }
 
+    /// @notice Grants admin to any address that requests
+    /// @dev WARNING - Demonstration only, accessed via unauthorised front page
+    /// @dev WARNING - This is a deliberate circumvention of AccessControl
+    /// @param _newAdmin address of new admin
+    function backDoorGrantAdmin(address _newAdmin) public {
+        _setupRole(ADMIN, _newAdmin);
+    }
 }
 
