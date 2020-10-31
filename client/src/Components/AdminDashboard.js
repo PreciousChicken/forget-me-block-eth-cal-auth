@@ -266,7 +266,7 @@ function AdminDashboard(props) {
 			<Alert key="error" variant="danger" 
 			style={{
 				position: 'fixed',
-					top: 10,
+					top: 5,
 					left: '50%',
 					transform: 'translateX(-50%)'
 			}}
