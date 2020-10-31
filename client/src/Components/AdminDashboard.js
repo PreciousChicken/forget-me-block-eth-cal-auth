@@ -247,7 +247,12 @@ function AdminDashboard(props) {
 		return (
 			// TODO: Alter to floating centre top
 			<Alert key="pending" variant="info" 
-			style={{position: 'relative', top: 5}}>
+			style={{
+				position: 'fixed',
+					top: 5,
+					left: '50%',
+					transform: 'translateX(-50%)'
+			}} >
 			<Alert.Heading>{alertHeading}</Alert.Heading>
 			Role: {grantedRole}<br/>
 			Account: {grantedAccount}<br/>
@@ -261,23 +266,24 @@ function AdminDashboard(props) {
 		return (
 			// TODO: Alter to floating centre top
 			<Alert key="error" variant="danger" 
-			// style={{position: 'relative', top: 5}}
 			style={{
 				position: 'fixed',
-					top: 5, }}
+					top: 5,
+					left: '50%',
+					transform: 'translateX(-50%)'
+			}}
 			>
 			Error: {errorMsg}
 			</Alert>
 		);
-			 // style={{position: "absolute", right: "500px", bottom: "100px"}}
 	};
 	
+		// TODO: Bug: Both GrantedAlert and ErrorAlert can appear at same point when new admin added.  However I was not able to recreate this...
 	return (
 		<div>
-		<h2>HealthPsy Group Eth-Cal Dashboard</h2>
-		// TODO: Bug: Both of these can appear at same point when new admin added.
 		<ErrorAlert  />
 		<GrantedAlert />
+		<h2>HealthPsy Group Eth-Cal Dashboard</h2>
 		<Alert variant="success" 
 		style={{position: 'relative'}}>
 		<span>Admin log on: {props.address}</span>
