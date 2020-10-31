@@ -15963,11 +15963,24 @@
           ],
           "name": "RoleRevoked",
           "type": "event"
+        },
+        "0xb9ac99be669341f06b558515f8bce1114d7a90dab48fb38e993e73bc5e5fe5c3": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "internalType": "address",
+              "name": "sender",
+              "type": "address"
+            }
+          ],
+          "name": "DeleteConfirmation",
+          "type": "event"
         }
       },
       "links": {},
-      "address": "0xD18446d1fd99B185162DA7C41396276e17F81cF6",
-      "transactionHash": "0xd68b79c3bf7306f23bb442c7e89b64a4a59acba9c07ba6c0fd525b452d657521"
+      "address": "0xaB51f058b3120A0de7e20271bd53E42FA045C369",
+      "transactionHash": "0xb3945e9f081e8c6bab85ed7ed9a6f0dbef84c640086f9303caf00312a2d455f2"
     },
     "5777": {
       "events": {
@@ -16085,7 +16098,7 @@
     }
   },
   "schemaVersion": "3.2.3",
-  "updatedAt": "2020-10-31T16:17:12.082Z",
+  "updatedAt": "2020-10-31T17:21:26.574Z",
   "networkType": "ethereum",
   "devdoc": {
     "author": "PreciousChicken",
