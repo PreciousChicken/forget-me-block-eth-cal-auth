@@ -172,7 +172,6 @@ function AdminDashboard(props) {
 		setPendingTransfer(true);
 		const grantAccess = new FormData(event.target);
 		const requesteeAddress = grantAccess.get('requestAddress');
-		//TODO: React needs to listen for deleting all Events, add a solidity event to this?
 		contractCalAuth.transferCalAuth(
 			requesteeAddress)
 			.then(contractCalAuth.on("OwnershipTransferred", (previousOwner, newOwner) => {
@@ -245,7 +244,6 @@ function AdminDashboard(props) {
 	const GrantedAlert = () => {
 		if (!isGranted) return null;
 		return (
-			// TODO: Alter to floating centre top
 			<Alert key="pending" variant="info" 
 			style={{
 				position: 'fixed',
@@ -268,7 +266,7 @@ function AdminDashboard(props) {
 			<Alert key="error" variant="danger" 
 			style={{
 				position: 'fixed',
-					top: 5,
+					top: 10,
 					left: '50%',
 					transform: 'translateX(-50%)'
 			}}
@@ -355,7 +353,6 @@ function AdminDashboard(props) {
 		<Form.Control as="select" name="requestLevel">
 		<option value={Roles.USER_READ_ROLE.TXT}>Read-only</option>
 		<option value={Roles.USER_WRITE_ROLE.TXT}>Read-write</option>
-		<option value={Roles.ADMIN.TXT}>Admin</option>
 		</Form.Control>
 		</Form.Group>
 		<Form.Group controlId="accessWindow">
@@ -415,4 +412,5 @@ function AdminDashboard(props) {
 
 export default AdminDashboard;
 
+		// <option value={Roles.ADMIN.TXT}>Admin</option>
 // color: #495057;
