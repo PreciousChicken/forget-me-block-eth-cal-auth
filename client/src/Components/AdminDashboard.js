@@ -249,6 +249,7 @@ function AdminDashboard(props) {
 				position: 'fixed',
 					top: 5,
 					left: '50%',
+					zIndex: 1,
 					transform: 'translateX(-50%)'
 			}} >
 			<Alert.Heading>{alertHeading}</Alert.Heading>
@@ -268,6 +269,7 @@ function AdminDashboard(props) {
 				position: 'fixed',
 					top: 5,
 					left: '50%',
+					zIndex: 1,
 					transform: 'translateX(-50%)'
 			}}
 			>
