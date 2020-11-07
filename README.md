@@ -1,4 +1,4 @@
-# forget-me-block-eth-cal-auth
+# Forget-me-block: Ethereum calendar (role based access)
 
 Research Project hosting a RFC 5545 (iCalendar) compliant calendar on the Ethereum blockchain, for more details see the accompanying introduction at [Forget-me-block: Ethereum calendar](https://www.preciouschicken.com/blog/posts/forget-me-block-eth-cal/).
 
